@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5435:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./migrations:/docker-entrypoint-initdb.d
@@ -33,6 +33,7 @@ services:
       CHUNK_SIZE_CHARS: ${CHUNK_SIZE_CHARS:-1400}
       WORK_DIR: /tmp/repo-architect
       SQL_DEBUG: ${SQL_DEBUG:-false}
+      DEBUG: ${DEBUG:-true}
     ports:
       - "8000:8000"
     depends_on:
@@ -40,6 +41,7 @@ services:
         condition: service_healthy
     volumes:
       - repo_temp:/tmp/repo-architect
+      - .:/app/backend  # Mount source code for hot reloading
     restart: unless-stopped
 
 volumes:

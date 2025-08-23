@@ -34,19 +34,19 @@ export function MarkdownRenderer({ content }: MarkdownRendererProps) {
             <h1 className="text-3xl font-bold mb-4 text-gray-900">{children}</h1>
           ),
           h2: ({ children }) => (
-            <h2 className="text-2xl font-semibold mb-3 text-gray-800">{children}</h2>
+            <h2 className="text-2xl font-semibold mb-3 text-gray-900">{children}</h2>
           ),
           h3: ({ children }) => (
-            <h3 className="text-xl font-medium mb-2 text-gray-700">{children}</h3>
+            <h3 className="text-xl font-medium mb-2 text-gray-900">{children}</h3>
           ),
           p: ({ children }) => (
-            <p className="mb-4 text-gray-700 leading-relaxed">{children}</p>
+            <p className="mb-4 text-gray-900 leading-relaxed">{children}</p>
           ),
           ul: ({ children }) => (
-            <ul className="mb-4 ml-6 list-disc text-gray-700">{children}</ul>
+            <ul className="mb-4 ml-6 list-disc text-gray-900">{children}</ul>
           ),
           ol: ({ children }) => (
-            <ol className="mb-4 ml-6 list-decimal text-gray-700">{children}</ol>
+            <ol className="mb-4 ml-6 list-decimal text-gray-900">{children}</ol>
           ),
           li: ({ children }) => (
             <li className="mb-1">{children}</li>

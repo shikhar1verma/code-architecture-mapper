@@ -10,7 +10,7 @@ class AnalysisDAO:
     """Data Access Object for Analysis operations"""
 
     @staticmethod
-    def create_analysis(db: Session, analysis_data: Dict[str, Any]) -> Analysis:
+    def create_analysis(db: Session, analysis_data: Dict[str, Any], analysis_id: str = None) -> Analysis:
         """Create a new analysis record"""
         # Extract repo info from URL
         repo_url = analysis_data.get("repo_url", "")
@@ -18,22 +18,29 @@ class AnalysisDAO:
         repo_owner = repo_parts[-2] if len(repo_parts) >= 2 else None
         repo_name = repo_parts[-1].replace(".git", "") if len(repo_parts) >= 1 else None
 
-        analysis = Analysis(
-            repo_url=repo_url,
-            repo_owner=repo_owner,
-            repo_name=repo_name,
-            commit_sha=analysis_data.get("commit_sha"),
-            status=analysis_data.get("status", "queued"),
-            message=analysis_data.get("message"),
-            language_stats=analysis_data.get("language_stats"),
-            loc_total=analysis_data.get("loc_total", 0),
-            file_count=analysis_data.get("file_count", 0),
-            metrics=analysis_data.get("metrics"),
-            architecture_md=analysis_data.get("architecture_md"),
-            mermaid_modules=analysis_data.get("mermaid_modules"),
-            mermaid_folders=analysis_data.get("mermaid_folders"),
-            token_budget=analysis_data.get("token_budget", {"embed_calls": 0, "gen_calls": 0, "chunks": 0})
-        )
+        # Use provided analysis_id or let database generate one
+        analysis_kwargs = {
+            "repo_url": repo_url,
+            "repo_owner": repo_owner,
+            "repo_name": repo_name,
+            "commit_sha": analysis_data.get("commit_sha"),
+            "status": analysis_data.get("status", "queued"),
+            "message": analysis_data.get("message"),
+            "language_stats": analysis_data.get("language_stats"),
+            "loc_total": analysis_data.get("loc_total", 0),
+            "file_count": analysis_data.get("file_count", 0),
+            "metrics": analysis_data.get("metrics"),
+            "architecture_md": analysis_data.get("architecture_md"),
+            "mermaid_modules": analysis_data.get("mermaid_modules"),
+            "mermaid_folders": analysis_data.get("mermaid_folders"),
+            "token_budget": analysis_data.get("token_budget", {"embed_calls": 0, "gen_calls": 0, "chunks": 0})
+        }
+        
+        # Add specific ID if provided
+        if analysis_id:
+            analysis_kwargs["id"] = uuid.UUID(analysis_id)
+            
+        analysis = Analysis(**analysis_kwargs)
         
         db.add(analysis)
         db.commit()
@@ -127,16 +134,40 @@ def save_analysis_summary(analysis_id: str, payload: dict):
         existing = AnalysisDAO.get_analysis(db, analysis_id)
         if existing:
             # Update existing analysis
-            AnalysisDAO.update_analysis(db, analysis_id, payload)
+            update_data = payload.copy()
+            
+            # Extract artifacts data and flatten to top level
+            artifacts = update_data.pop("artifacts", {})
+            if artifacts:
+                update_data["architecture_md"] = artifacts.get("architecture_md")
+                update_data["mermaid_modules"] = artifacts.get("mermaid_modules")
+                update_data["mermaid_folders"] = artifacts.get("mermaid_folders")
+            
+            # Extract repo data and flatten to top level
+            repo = update_data.pop("repo", {})
+            if repo:
+                update_data["repo_url"] = repo.get("url")
+                update_data["commit_sha"] = repo.get("commit_sha")
+                
+            AnalysisDAO.update_analysis(db, analysis_id, update_data)
         else:
             # Create new analysis with the given ID
             analysis_data = payload.copy()
-            analysis = AnalysisDAO.create_analysis(db, analysis_data)
             
-            # Update with the specific ID if needed (for compatibility)
-            if str(analysis.id) != analysis_id:
-                # This is mainly for backward compatibility
-                pass
+            # Extract artifacts data and flatten to top level
+            artifacts = analysis_data.pop("artifacts", {})
+            if artifacts:
+                analysis_data["architecture_md"] = artifacts.get("architecture_md")
+                analysis_data["mermaid_modules"] = artifacts.get("mermaid_modules")
+                analysis_data["mermaid_folders"] = artifacts.get("mermaid_folders")
+            
+            # Extract repo data and flatten to top level
+            repo = analysis_data.pop("repo", {})
+            if repo:
+                analysis_data["repo_url"] = repo.get("url")
+                analysis_data["commit_sha"] = repo.get("commit_sha")
+            
+            analysis = AnalysisDAO.create_analysis(db, analysis_data, analysis_id)
     finally:
         db.close()
 

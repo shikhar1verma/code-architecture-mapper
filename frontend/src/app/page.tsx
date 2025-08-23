@@ -94,8 +94,8 @@ export default function Home() {
           <div className="max-w-4xl mx-auto mt-12">
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-white p-6 rounded-lg shadow-sm border">
-                <h3 className="text-lg font-semibold mb-3">What this tool does</h3>
-                <ul className="space-y-2 text-gray-600">
+                <h3 className="text-lg font-semibold mb-3 text-gray-900">What this tool does</h3>
+                <ul className="space-y-2 text-gray-700">
                   <li>• Analyzes Python, TypeScript, and JavaScript codebases</li>
                   <li>• Generates architecture overview documentation</li>
                   <li>• Creates Mermaid diagrams for dependencies and structure</li>
@@ -105,10 +105,10 @@ export default function Home() {
               </div>
               
               <div className="bg-white p-6 rounded-lg shadow-sm border">
-                <h3 className="text-lg font-semibold mb-3">How to use</h3>
-                <ol className="space-y-2 text-gray-600">
+                <h3 className="text-lg font-semibold mb-3 text-gray-900">How to use</h3>
+                <ol className="space-y-2 text-gray-700">
                   <li>1. Enter a public GitHub repository URL</li>
-                  <li>2. Click "Analyze Repository" to start</li>
+                  <li>2. Click &quot;Analyze Repository&quot; to start</li>
                   <li>3. Wait for analysis to complete</li>
                   <li>4. Explore results across different tabs</li>
                   <li>5. Download reports and diagrams as needed</li>

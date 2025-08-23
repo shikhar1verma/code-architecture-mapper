@@ -12,13 +12,16 @@ _model = genai.GenerativeModel(GEMINI_MODEL)
 
 
 def generate_markdown(system_prompt: str, user_prompt: str) -> str:
-    resp = _model.generate_content([{"role":"system","parts":[system_prompt]}, user_prompt])
+    # Combine system and user prompts into a single message for Gemini
+    combined_prompt = f"{system_prompt}\n\n{user_prompt}"
+    resp = _model.generate_content(combined_prompt)
     return resp.text or ""
 
 
 def generate_json(system_prompt: str, user_prompt: str, schema: Type[BaseModel]) -> Any:
     # Try to coerce the first fenced JSON if present
-    resp = _model.generate_content([{"role":"system","parts":[system_prompt]}, user_prompt])
+    combined_prompt = f"{system_prompt}\n\n{user_prompt}"
+    resp = _model.generate_content(combined_prompt)
     txt = resp.text or "{}"
     data = _extract_json(txt)
     try:
@@ -26,10 +29,8 @@ def generate_json(system_prompt: str, user_prompt: str, schema: Type[BaseModel])
         return obj
     except ValidationError:
         # second try: ask to fix format
-        fix = _model.generate_content([
-            {"role":"system","parts":[system_prompt + " Return ONLY valid JSON matching schema."]},
-            "The previous output was invalid. Fix it.\n\n" + user_prompt
-        ])
+        fix_prompt = f"{system_prompt} Return ONLY valid JSON matching schema.\n\nThe previous output was invalid. Fix it.\n\n{user_prompt}"
+        fix = _model.generate_content(fix_prompt)
         data2 = _extract_json(fix.text or "{}")
         return schema.model_validate(data2)
 

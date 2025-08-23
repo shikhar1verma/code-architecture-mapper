@@ -30,7 +30,7 @@ export function UrlInput({ onSubmit, loading }: UrlInputProps) {
             placeholder="https://github.com/owner/repository"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            className="pl-10"
+            className="pl-10 text-gray-900"
             disabled={loading}
             required
           />

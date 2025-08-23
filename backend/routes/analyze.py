@@ -23,4 +23,5 @@ def start_analyze(req: StartAnalysisRequest):
         save_analysis_summary(analysis_id, summary)
         return {"analysis_id": analysis_id, "status": "complete"}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"analysis failed: {e}") 
+        # raise HTTPException(status_code=500, detail=f"analysis failed: {e}")
+        raise

@@ -41,7 +41,7 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
     <div className="w-full max-w-6xl mx-auto">
       {/* Repository Info */}
       <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
-        <h2 className="text-xl font-semibold mb-2">Repository Analysis</h2>
+        <h2 className="text-xl font-semibold mb-2 text-gray-900">Repository Analysis</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
           <div>
             <span className="font-medium">Repository:</span>
@@ -101,7 +101,7 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
         <TabsContent value="overview">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Architecture Overview</h3>
+              <h3 className="text-lg font-semibold text-gray-900">Architecture Overview</h3>
               <Button onClick={downloadMarkdown} variant="outline" size="sm">
                 <Download className="w-4 h-4 mr-2" />
                 Download MD
@@ -123,7 +123,7 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
           <div className="space-y-6">
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Module Dependencies</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Module Dependencies</h3>
                 <Button
                   onClick={() => downloadMermaid(result.artifacts.mermaid_modules, 'modules.mmd')}
                   variant="outline"
@@ -138,7 +138,7 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
 
             <div>
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Folder Structure</h3>
+                <h3 className="text-lg font-semibold text-gray-900">Folder Structure</h3>
                 <Button
                   onClick={() => downloadMermaid(result.artifacts.mermaid_folders, 'folders.mmd')}
                   variant="outline"
@@ -155,7 +155,7 @@ export function AnalysisResults({ result }: AnalysisResultsProps) {
 
         <TabsContent value="files">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Central Files (by Degree Centrality)</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Central Files (by Degree Centrality)</h3>
             <FilesTable files={result.metrics.central_files} />
           </div>
         </TabsContent>
