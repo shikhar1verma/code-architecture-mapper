@@ -1,0 +1,88 @@
+{
+  "example": {
+    "name": "Flask Web App",
+    "repo_url": "https://github.com/pallets/flask",
+    "repo_owner": "pallets",
+    "repo_name": "flask",
+    "default_branch": "main",
+    "commit_sha": "flask567xyz890",
+    "status": "complete",
+    "message": "Analysis complete",
+    "language_stats": {
+      "Python": 89.6,
+      "HTML": 5.2,
+      "JavaScript": 3.1,
+      "CSS": 2.1
+    },
+    "loc_total": 8234,
+    "file_count": 156,
+    "metrics": {
+      "central_files": [
+        {
+          "path": "src/flask/app.py",
+          "fan_in": 22,
+          "fan_out": 7,
+          "degree_centrality": 0.94
+        },
+        {
+          "path": "src/flask/blueprints.py",
+          "fan_in": 8,
+          "fan_out": 4,
+          "degree_centrality": 0.68
+        }
+      ],
+      "graph": {
+        "nodes": [
+          {"id": "src/flask/app.py", "fan_in": 22, "fan_out": 7},
+          {"id": "src/flask/blueprints.py", "fan_in": 8, "fan_out": 4}
+        ],
+        "edges": [
+          {"source": "src/flask/app.py", "target": "src/flask/blueprints.py"}
+        ]
+      },
+      "dependency_analysis": {
+        "internal_edges": [
+          {"src": "src/flask/app.py", "dst": "src/flask/blueprints.py"}
+        ],
+        "external_groups": {
+          "Web": [["werkzeug", "WSGI utility"], ["jinja2", "Template engine"]],
+          "Utils": [["click", "CLI framework"], ["itsdangerous", "Security"]]
+        },
+        "summary": {
+          "internal_count": 34,
+          "external_count": 6,
+          "categories": ["Web", "Utils", "Security"]
+        }
+      }
+    },
+    "components": [
+      {
+        "name": "Core Web Framework",
+        "purpose": "Lightweight WSGI web application framework with flexible routing and templating",
+        "key_files": [
+          {"path": "src/flask/app.py", "reason": "Main Flask application class"},
+          {"path": "src/flask/blueprints.py", "reason": "Blueprint system for modular applications"}
+        ],
+        "apis": [
+          {"name": "Flask", "file": "src/flask/app.py"},
+          {"name": "Blueprint", "file": "src/flask/blueprints.py"}
+        ],
+        "dependencies": ["werkzeug", "jinja2", "click"],
+        "risks": ["Thread safety in development mode", "Configuration management"],
+        "tests": ["tests/test_basic.py", "tests/test_blueprints.py"]
+      }
+    ],
+    "architecture_md": "# Flask Framework Architecture\n\nFlask is a lightweight WSGI web application framework. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.\n\n## Core Components\n\n- **Application Context**: Central Flask application object\n- **Blueprint System**: Modular application structure\n- **Request Handling**: WSGI-based request/response cycle\n- **Template Engine**: Jinja2 integration for dynamic content\n\n## Design Philosophy\n\n- Minimalist core with extensions\n- Explicit is better than implicit\n- Simple tasks should be simple",
+    "mermaid_modules": "graph TD\n    A[src/flask/app.py] --> B[src/flask/blueprints.py]\n    A --> C[src/flask/templating.py]\n    A --> D[werkzeug]",
+    "mermaid_folders": "graph TD\n    ROOT[flask]\n    ROOT --> SRC[src/flask/]\n    ROOT --> TESTS[tests/]\n    ROOT --> EXAMPLES[examples/]",
+    "mermaid_modules_simple": "graph TD\n    A[\"🌶️ Flask App\"] --> B[\"📋 Blueprints\"]\n    A --> C[\"🎨 Templates\"]\n    B --> D[\"🔧 Werkzeug\"]",
+    "mermaid_modules_balanced": "graph TD\n    subgraph \"Flask Framework\"\n        A[Application] --> B[Blueprint System]\n        A --> C[Request Context]\n    end\n    \n    subgraph \"External Libraries\"\n        D[Werkzeug]\n        E[Jinja2]\n    end\n    \n    A --> D\n    C --> E",
+    "mermaid_modules_detailed": "graph TD\n    A[src/flask/app.py] -->|\"registers\"| B[src/flask/blueprints.py]\n    A -->|\"manages\"| C[src/flask/ctx.py]\n    A -->|\"renders\"| D[src/flask/templating.py]\n    C -->|\"built on\"| E[werkzeug/local.py]\n    D -->|\"uses\"| F[jinja2/environment.py]\n    A -->|\"handles\"| G[src/flask/wrappers.py]",
+    "token_budget": {
+      "embed_calls": 34,
+      "gen_calls": 6,
+      "chunks": 156
+    },
+    "description": "Lightweight WSGI web application framework - simple, flexible, and scalable"
+  }
+} 

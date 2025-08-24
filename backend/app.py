@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from backend.routes import analyze, analysis
+from backend.routes import analyze, analysis, examples
 from backend.database.connection import init_db
 
 app = FastAPI(
@@ -24,6 +24,7 @@ def startup_event():
 
 app.include_router(analyze.router, prefix="/api")
 app.include_router(analysis.router, prefix="/api")
+app.include_router(examples.router, prefix="/api")
 
 @app.get("/")
 def root():

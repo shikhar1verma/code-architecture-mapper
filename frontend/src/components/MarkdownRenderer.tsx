@@ -11,21 +11,25 @@ interface MarkdownRendererProps {
 export function MarkdownRenderer({ content }: MarkdownRendererProps) {
   return (
     <div className="prose prose-gray max-w-none">
-      <ReactMarkdown
-        components={{
-          code({ node, inline, className, children, ...props }) {
+              <ReactMarkdown
+          components={{
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          code: (props: any) => {
+            const { className, children, ...rest } = props;
             const match = /language-(\w+)/.exec(className || '');
+            const inline = !match;
             return !inline && match ? (
               <SyntaxHighlighter
-                style={tomorrow}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                style={tomorrow as any}
                 language={match[1]}
                 PreTag="div"
-                {...props}
+                {...rest}
               >
                 {String(children).replace(/\n$/, '')}
               </SyntaxHighlighter>
             ) : (
-              <code className={className} {...props}>
+              <code className={className} {...rest}>
                 {children}
               </code>
             );

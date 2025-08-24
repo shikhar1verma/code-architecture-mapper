@@ -4,20 +4,38 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # LLM Configuration
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-1.5-flash")
 
-# Analysis Configuration
-TOP_FILES = int(os.getenv("TOP_FILES", 40))
-COMPONENT_COUNT = int(os.getenv("COMPONENT_COUNT", 8))
-CHUNK_SIZE_CHARS = int(os.getenv("CHUNK_SIZE_CHARS", 1400))
+# Model Fallback Configuration (in order of preference)
+# From highest capability to most available (lower quotas but higher RPM/RPD)
+GEMINI_MODEL_FALLBACK_ORDER = [
+    "gemini-2.5-flash",      # Tier 1: Best model, lowest quotas (10 RPM, 250K TPM, 250 RPD)
+    "gemini-2.5-flash-lite", # Tier 2: Good model, better quotas (15 RPM, 250K TPM, 1000 RPD)
+    "gemini-2.0-flash",      # Tier 3: Good model, better quotas (15 RPM, 1M TPM, 200 RPD)
+    "gemini-2.0-flash-lite", # Tier 4: Fastest model, highest quotas (30 RPM, 1M TPM, 200 RPD)
+    # GEMINI_MODEL,            # Tier 5: Legacy fallback (configured via env var, default: gemini-1.5-flash)
+]
+
+# Retry Configuration
+RETRY_MIN_DELAY_SECONDS = 2
+RETRY_MAX_DELAY_SECONDS = 5
+MAX_RETRIES_PER_MODEL = 1  # How many times to retry each model before moving to next
 
 # Database Configuration
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", 
-    "postgresql://postgres:postgres@localhost:5432/repo_architect"
-)
-SQL_DEBUG = os.getenv("SQL_DEBUG", "false").lower() == "true"
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/repo_architect")
+
+# Analysis Configuration
+TOP_FILES = int(os.getenv("TOP_FILES", "50"))
+COMPONENT_COUNT = int(os.getenv("COMPONENT_COUNT", "8"))
+CHUNK_SIZE_CHARS = int(os.getenv("CHUNK_SIZE_CHARS", "8000"))
+
+# New: LLM Feature Toggles
+USE_LLM_FOR_DIAGRAMS = os.getenv("USE_LLM_FOR_DIAGRAMS", "true").lower() == "true"
+USE_LLM_FOR_DEPENDENCY_ANALYSIS = os.getenv("USE_LLM_FOR_DEPENDENCY_ANALYSIS", "false").lower() == "true"
+
+# Performance Configuration
+MAX_LLM_CALLS_PER_ANALYSIS = int(os.getenv("MAX_LLM_CALLS_PER_ANALYSIS", "10"))
 
 # Git and temporary storage paths
 WORK_DIR = os.getenv("WORK_DIR", "/tmp/repo-architect")

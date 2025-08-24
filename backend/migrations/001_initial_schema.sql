@@ -1,5 +1,6 @@
 -- Initial schema for Code Architecture Mapper
--- Creates core tables for MVP functionality
+-- Creates core tables for MVP functionality with intelligent dependency diagrams
+-- Updated: 2024-12-19 - Removed files tables as we don't store individual file data
 
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -18,48 +19,63 @@ CREATE TABLE analyses (
     loc_total INTEGER DEFAULT 0,
     file_count INTEGER DEFAULT 0,
     metrics JSONB, -- {"central_files":[...], "graph": {"nodes":..., "edges":...}}
+    components JSONB DEFAULT '[]'::jsonb, -- component analysis results
     architecture_md TEXT,
+    
+    -- Original diagrams
     mermaid_modules TEXT,
     mermaid_folders TEXT,
+    
+    -- Intelligent dependency diagrams (LLM-powered)
+    mermaid_modules_simple TEXT,
+    mermaid_modules_balanced TEXT,
+    mermaid_modules_detailed TEXT,
+    
     token_budget JSONB DEFAULT '{"embed_calls":0,"gen_calls":0,"chunks":0}',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Files table - stores individual file metrics and information
-CREATE TABLE files (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    analysis_id UUID NOT NULL REFERENCES analyses(id) ON DELETE CASCADE,
-    path TEXT NOT NULL,
-    language TEXT,
-    loc INTEGER DEFAULT 0,
-    fan_in INTEGER DEFAULT 0,
-    fan_out INTEGER DEFAULT 0,
-    centrality FLOAT8 DEFAULT 0.0,
-    hash TEXT, -- file hash for change detection
-    snippet TEXT, -- first N lines or salient excerpt
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Examples table - stores example repositories for the examples endpoint
+-- Examples table - stores complete example analysis data (independent copy)
 CREATE TABLE examples (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    repo_url TEXT NOT NULL UNIQUE,
-    analysis_id UUID REFERENCES analyses(id),
-    label TEXT NOT NULL,
-    description TEXT,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+    name TEXT NOT NULL UNIQUE, -- Human readable name for dropdown
+    repo_url TEXT NOT NULL,
+    repo_owner TEXT,
+    repo_name TEXT,
+    default_branch TEXT,
+    commit_sha TEXT,
+    status TEXT NOT NULL DEFAULT 'complete',
+    message TEXT,
+    language_stats JSONB,
+    loc_total INTEGER DEFAULT 0,
+    file_count INTEGER DEFAULT 0,
+    metrics JSONB,
+    components JSONB DEFAULT '[]'::jsonb,
+    architecture_md TEXT,
+    
+    -- Original diagrams
+    mermaid_modules TEXT,
+    mermaid_folders TEXT,
+    
+    -- Intelligent dependency diagrams
+    mermaid_modules_simple TEXT,
+    mermaid_modules_balanced TEXT,
+    mermaid_modules_detailed TEXT,
+    
+    token_budget JSONB DEFAULT '{"embed_calls":0,"gen_calls":0,"chunks":0}',
+    description TEXT, -- Description for the example
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Indexes for performance
 CREATE INDEX idx_analyses_repo_url ON analyses(repo_url);
 CREATE INDEX idx_analyses_status ON analyses(status);
 CREATE INDEX idx_analyses_created_at ON analyses(created_at DESC);
+CREATE INDEX idx_analyses_components ON analyses USING GIN (components);
 
-CREATE INDEX idx_files_analysis_id ON files(analysis_id);
-CREATE INDEX idx_files_centrality ON files(centrality DESC);
-CREATE INDEX idx_files_path ON files(path);
-
+CREATE INDEX idx_examples_name ON examples(name);
 CREATE INDEX idx_examples_repo_url ON examples(repo_url);
 
 -- Trigger to update updated_at on analyses table
@@ -76,19 +92,26 @@ CREATE TRIGGER update_analyses_updated_at
     FOR EACH ROW 
     EXECUTE FUNCTION update_updated_at_column();
 
--- Insert some example repositories for demo purposes
-INSERT INTO examples (repo_url, label, description) VALUES
-    ('https://github.com/encode/uvicorn', 'Uvicorn', 'Lightning-fast ASGI server implementation'),
-    ('https://github.com/tiangolo/fastapi', 'FastAPI', 'Modern, fast web framework for building APIs'),
-    ('https://github.com/psf/requests', 'Requests', 'Simple HTTP library for Python');
+CREATE TRIGGER update_examples_updated_at 
+    BEFORE UPDATE ON examples 
+    FOR EACH ROW 
+    EXECUTE FUNCTION update_updated_at_column();
+
+-- Example data will be loaded from fixtures during Docker startup
 
 -- Comments for documentation
 COMMENT ON TABLE analyses IS 'Stores repository analysis results and metadata';
-COMMENT ON TABLE files IS 'Stores individual file metrics and centrality data';
-COMMENT ON TABLE examples IS 'Stores example repositories for the examples endpoint';
+COMMENT ON TABLE examples IS 'Stores complete example analysis data (independent, static examples)';
 
 COMMENT ON COLUMN analyses.status IS 'Analysis status: queued, running, complete, error';
 COMMENT ON COLUMN analyses.metrics IS 'JSON containing central files list and graph data';
-COMMENT ON COLUMN files.centrality IS 'Degree centrality score (0.0 to 1.0)';
-COMMENT ON COLUMN files.fan_in IS 'Number of files that import this file';
-COMMENT ON COLUMN files.fan_out IS 'Number of files this file imports'; 
+COMMENT ON COLUMN analyses.components IS 'JSON array containing component analysis results';
+
+-- Original diagram columns
+COMMENT ON COLUMN analyses.mermaid_modules IS 'Basic module dependency diagram (rule-based)';
+COMMENT ON COLUMN analyses.mermaid_folders IS 'Project folder structure diagram';
+
+-- Intelligent dependency diagram columns
+COMMENT ON COLUMN analyses.mermaid_modules_simple IS 'Simplified overview diagram showing major component groups';
+COMMENT ON COLUMN analyses.mermaid_modules_balanced IS 'Balanced diagram with grouped modules and categorized dependencies';
+COMMENT ON COLUMN analyses.mermaid_modules_detailed IS 'Detailed diagram showing individual modules and relationships'; 

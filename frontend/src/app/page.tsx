@@ -3,30 +3,164 @@
 import { useState } from 'react';
 import { UrlInput } from '@/components/UrlInput';
 import { AnalysisResults } from '@/components/AnalysisResults';
-import { startAnalysis, getAnalysis } from '@/lib/api';
-import { AnalysisResult } from '@/types';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { ExamplesDropdown } from '@/components/ExamplesDropdown';
+import { startAnalysis, getAnalysis, fetchExampleData, refreshAnalysis } from '@/lib/api';
+import { AnalysisResult, ExampleData } from '@/types';
+import { AlertCircle, CheckCircle2, RefreshCw } from 'lucide-react';
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [analysisId, setAnalysisId] = useState<string | null>(null);
+  const [selectedExampleId, setSelectedExampleId] = useState<string | null>(null);
+  const [quotaExhausted, setQuotaExhausted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isShowingExample, setIsShowingExample] = useState(false);
+  const [isCachedResult, setIsCachedResult] = useState(false);
+  const [cachedAt, setCachedAt] = useState<string | null>(null);
+  const [currentRepoUrl, setCurrentRepoUrl] = useState<string | null>(null);
 
   const handleSubmit = async (url: string) => {
     setLoading(true);
     setError(null);
     setResult(null);
+    setAnalysisId(null);
+    setSelectedExampleId(null); // Reset example selection
+    setIsShowingExample(false);
+    setQuotaExhausted(false);
+    setIsCachedResult(false);
+    setCachedAt(null);
+    setCurrentRepoUrl(url);
 
     try {
       const response = await startAnalysis({ repo_url: url });
       
       if (response.status === 'complete') {
-        // Since the backend is synchronous, we can immediately fetch the result
+        // Store the analysis ID and fetch results
+        setAnalysisId(response.analysis_id);
+        setIsCachedResult(response.cached || false);
+        setCachedAt(response.cached_at || null);
         const data = await getAnalysis(response.analysis_id);
         setResult(data);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.log('Error caught:', err);
+      console.log('Error message:', err instanceof Error ? err.message : 'Not an Error object');
+      
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      
+      // Handle quota exhaustion specifically - check multiple ways
+      if (errorMessage.includes('quota_exhausted') || 
+          errorMessage.includes('429') || 
+          errorMessage.includes('quota') ||
+          (err && typeof err === 'object' && 'status' in err && (err as { status: number }).status === 429)) {
+        console.log('Quota exhausted detected!');
+        setQuotaExhausted(true);
+        // Don't set other errors, just show quota message
+      } 
+      // Handle other service unavailable errors
+      else if (errorMessage.includes('Service temporarily unavailable')) {
+        setError('The analysis service is temporarily unavailable. Please try again in a few moments.');
+      }
+      // Handle network/connection errors
+      else if (errorMessage.includes('Failed to fetch') || errorMessage.includes('Network')) {
+        setError('Unable to connect to the analysis service. Please check your internet connection and try again.');
+      }
+      // Handle timeout errors
+      else if (errorMessage.includes('timeout')) {
+        setError('The analysis is taking longer than expected. Please try again with a smaller repository or try again later.');
+      }
+      // General fallback for other errors
+      else {
+        console.log('Falling back to general error for message:', errorMessage);
+        setError('An unexpected error occurred during analysis. Please try again. If the problem persists, the repository might be too large or have access restrictions.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    if (!analysisId || !currentRepoUrl) return;
+    
+    setRefreshing(true);
+    setError(null);
+    setQuotaExhausted(false);
+
+    try {
+      console.log(`🔄 Refreshing analysis ${analysisId} for ${currentRepoUrl}`);
+      const response = await refreshAnalysis({ analysis_id: analysisId });
+      
+      if (response.status === 'complete') {
+        // Fetch updated results
+        const data = await getAnalysis(response.analysis_id);
+        setResult(data);
+        setIsCachedResult(false);
+        setCachedAt(null);
+        console.log(`✅ Refresh complete for ${currentRepoUrl}`);
+      }
+    } catch (err) {
+      console.log('Refresh error caught:', err);
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      
+      // Handle quota exhaustion specifically
+      if (errorMessage.includes('quota_exhausted') || 
+          errorMessage.includes('429') || 
+          errorMessage.includes('quota') ||
+          (err && typeof err === 'object' && 'status' in err && (err as { status: number }).status === 429)) {
+        console.log('Quota exhausted during refresh!');
+        setQuotaExhausted(true);
+      } else {
+        setError(`Failed to refresh analysis: ${errorMessage}`);
+      }
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  const handleExampleSelect = async (exampleId: string | null) => {
+    setSelectedExampleId(exampleId);
+    setError(null);
+    setQuotaExhausted(false);
+    setIsCachedResult(false);
+    setCachedAt(null);
+    setCurrentRepoUrl(null);
+    
+    if (!exampleId) {
+      // Clear selection
+      setResult(null);
+      setAnalysisId(null);
+      setIsShowingExample(false);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const exampleData = await fetchExampleData(exampleId);
+      
+      // Convert ExampleData to AnalysisResult format for compatibility
+      const analysisResult: AnalysisResult = {
+        status: exampleData.status,
+        repo: exampleData.repo,
+        language_stats: exampleData.language_stats,
+        loc_total: exampleData.loc_total,
+        file_count: exampleData.file_count,
+        metrics: exampleData.metrics,
+        components: exampleData.components,
+        artifacts: exampleData.artifacts,
+        token_budget: exampleData.token_budget
+      };
+      
+      setResult(analysisResult);
+      setAnalysisId(exampleId); // Use example ID as analysis ID for routing
+      setIsShowingExample(true);
+      
+    } catch (err) {
+      console.error('Failed to load example:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to load example';
+      setError(errorMessage);
+      setSelectedExampleId(null);
     } finally {
       setLoading(false);
     }
@@ -34,25 +168,58 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Code Architecture Mapper
           </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Analyze GitHub repositories and visualize their architecture
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Analyze repository architecture, understand dependencies, and visualize code relationships with AI-powered insights.
           </p>
-          
-          <UrlInput onSubmit={handleSubmit} loading={loading} />
+        </div>
+
+        {/* Quota Exhausted Message - Only show when quotas are exhausted */}
+        {quotaExhausted && (
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="flex items-center p-4 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle className="w-5 h-5 text-red-500 mr-3 flex-shrink-0" />
+              <div>
+                <h3 className="text-red-800 font-medium">Demo Application - Quotas Exhausted</h3>
+                <p className="text-red-700 text-sm mt-1">
+                  This is a demo application using free Gemini API quotas which have been exhausted for today. Please try again tomorrow when quotas reset.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Input Section */}
+        <UrlInput onSubmit={handleSubmit} loading={loading || refreshing} />
+
+        {/* Examples Dropdown */}
+        <div className="max-w-2xl mx-auto mb-8">
+          <div className="mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Or try an example:
+            </label>
+          </div>
+          <ExamplesDropdown
+            selectedExampleId={selectedExampleId}
+            onExampleSelect={handleExampleSelect}
+            disabled={loading || refreshing}
+          />
         </div>
 
         {/* Loading State */}
-        {loading && (
+        {(loading || refreshing) && (
           <div className="text-center py-12">
             <div className="inline-flex items-center px-4 py-2 bg-blue-50 text-blue-700 rounded-lg">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-700 mr-3"></div>
-              Analyzing repository... This may take a few moments.
+              {refreshing 
+                ? 'Refreshing analysis with latest data... This may take a few moments.'
+                : 'Analyzing repository... This may take a few moments.'
+              }
             </div>
           </div>
         )}
@@ -70,27 +237,58 @@ export default function Home() {
           </div>
         )}
 
-        {/* Success State */}
-        {result && (
+        {/* Success State - Only show when we have results and no quota issues */}
+        {result && analysisId && !quotaExhausted && (
           <div className="mb-8">
             <div className="max-w-2xl mx-auto mb-6">
               <div className="flex items-center p-4 bg-green-50 border border-green-200 rounded-lg">
                 <CheckCircle2 className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                <div>
-                  <h3 className="text-green-800 font-medium">Analysis Complete</h3>
+                <div className="flex-1">
+                  <h3 className="text-green-800 font-medium">
+                    {isShowingExample 
+                      ? 'Example Loaded' 
+                      : isCachedResult 
+                        ? 'Analysis Retrieved from Cache' 
+                        : 'Analysis Complete'
+                    }
+                  </h3>
                   <p className="text-green-700 text-sm mt-1">
-                    Repository analyzed successfully. View results below.
+                    {isShowingExample 
+                      ? 'Example repository loaded successfully. View analysis below.'
+                      : isCachedResult
+                        ? `Previous analysis found${cachedAt ? ` (analyzed on ${new Date(cachedAt).toLocaleDateString()})` : ''}. Click refresh for latest analysis.`
+                        : 'Repository analyzed successfully. View results below.'
+                    }
                   </p>
                 </div>
+                {isCachedResult && !isShowingExample && (
+                  <button
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    className="ml-4 inline-flex items-center px-3 py-2 text-xs font-medium text-green-700 bg-green-100 border border-green-300 rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {refreshing ? (
+                      <>
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-700 mr-1"></div>
+                        Refreshing...
+                      </>
+                    ) : (
+                      <>
+                        <RefreshCw className="w-3 h-3 mr-1" />
+                        Refresh
+                      </>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
             
-            <AnalysisResults result={result} />
+            <AnalysisResults result={result} analysisId={analysisId} />
           </div>
         )}
 
-        {/* Help Text */}
-        {!loading && !result && !error && (
+        {/* Help Text - Only show when no loading, no results, no errors, and no quota issues */}
+        {!loading && !refreshing && !result && !error && !quotaExhausted && (
           <div className="max-w-4xl mx-auto mt-12">
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-white p-6 rounded-lg shadow-sm border">
