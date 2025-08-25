@@ -3,15 +3,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mermaid from 'mermaid';
 import { Button } from '@/components/ui/Button';
-import { RefreshCw, AlertCircle, ZoomIn, ZoomOut, RotateCcw, Copy } from 'lucide-react';
+import { RefreshCw, AlertCircle, ZoomIn, ZoomOut, RotateCcw, Copy, Move, Maximize2, Target, Download, Image } from 'lucide-react';
 
 interface MermaidDiagramProps {
   chart: string;
   id?: string;
   onRetry?: (brokenCode: string, errorMessage: string) => void;
+  onDownloadReady?: (downloadSVG: () => void, downloadPNG: () => void) => void;
 }
 
-export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: MermaidDiagramProps) {
+export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry, onDownloadReady }: MermaidDiagramProps) {
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [renderError, setRenderError] = useState<string | null>(null);
@@ -20,6 +21,12 @@ export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: Merma
   const [isRetrying, setIsRetrying] = useState(false);
   const [zoomLevel, setZoomLevel] = useState(1);
   const [renderKey, setRenderKey] = useState(0);
+  const [panPosition, setPanPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isMouseOverDiagram, setIsMouseOverDiagram] = useState(false);
+  const [diagramDimensions, setDiagramDimensions] = useState({ width: 0, height: 0 });
+  const [isAutoFitted, setIsAutoFitted] = useState(false);
 
   // Extract concise error message for LLM
   const extractConciseError = (error: any): string => {
@@ -109,6 +116,16 @@ export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: Merma
       startOnLoad: false,
       theme: 'default',
       securityLevel: 'loose',
+      fontFamily: 'arial',
+      fontSize: 14,
+      // Enable proper edge label parsing
+      markdownAutoWrap: false,
+      htmlLabels: true,
+      // Ensure edge labels are processed correctly
+      flowchart: {
+        htmlLabels: true,
+        useMaxWidth: false,
+      }
     });
 
     // Clear any existing SVG elements with the same ID to prevent conflicts
@@ -135,6 +152,11 @@ export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: Merma
         
         if (ref.current) {
           ref.current.innerHTML = svg;
+          
+          // Auto-fit and center the diagram after rendering
+          setTimeout(() => {
+            autoFitAndCenter();
+          }, 100); // Small delay to ensure DOM is updated
         }
       } catch (error) {
         // Extract different error formats
@@ -169,6 +191,106 @@ export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: Merma
     renderDiagram();
   }, [chart, id, renderKey]);
 
+  // Add global mouse event listeners for better drag handling
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return;
+      e.preventDefault();
+      setPanPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y,
+      });
+    };
+
+    const handleGlobalMouseUp = () => {
+      setIsDragging(false);
+    };
+
+    if (isDragging) {
+      document.addEventListener('mousemove', handleGlobalMouseMove);
+      document.addEventListener('mouseup', handleGlobalMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging, dragStart]);
+
+  // Prevent scrolling on the container itself (not needed with React events)
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+    
+    // Prevent any native scroll behavior on the container
+    const preventContainerScroll = (e: Event) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    };
+    
+    container.addEventListener('scroll', preventContainerScroll);
+
+    return () => {
+      container.removeEventListener('scroll', preventContainerScroll);
+    };
+  }, []);
+
+  // Prevent page scrolling when mouse is over diagram, but allow diagram zoom
+  useEffect(() => {
+    const preventPageWheelScroll = (e: WheelEvent) => {
+      // Only prevent page scroll when mouse is over diagram AND event is outside our container
+      if (isMouseOverDiagram) {
+        const container = containerRef.current;
+        if (container && !container.contains(e.target as Node)) {
+          // This is a wheel event outside our diagram - prevent page scroll
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+        // If event is on our container, let it through (our React handler will manage it)
+      }
+    };
+
+    const disableKeyScroll = (e: KeyboardEvent) => {
+      if (isMouseOverDiagram && (
+        e.key === 'ArrowUp' || 
+        e.key === 'ArrowDown' || 
+        e.key === 'PageUp' || 
+        e.key === 'PageDown' || 
+        e.key === 'Home' || 
+        e.key === 'End' ||
+        e.key === ' '
+      )) {
+        e.preventDefault();
+        e.stopPropagation();
+        return false;
+      }
+    };
+
+    if (isMouseOverDiagram) {
+      // Prevent wheel scrolling on page but allow it on our container
+      document.addEventListener('wheel', preventPageWheelScroll, { passive: false });
+      document.addEventListener('keydown', disableKeyScroll);
+      
+      // Keep scrollbar visible but disabled
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`; // Prevent layout shift
+    } else {
+      // Re-enable page scrolling
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+
+    return () => {
+      document.removeEventListener('wheel', preventPageWheelScroll);
+      document.removeEventListener('keydown', disableKeyScroll);
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    };
+  }, [isMouseOverDiagram]);
+
   const handleRetry = async () => {
     if (!onRetry || !conciseError) return;
     
@@ -195,25 +317,292 @@ export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: Merma
 
   const handleZoomIn = () => {
     setZoomLevel(prev => Math.min(prev + 0.2, 3));
+    setIsAutoFitted(false);
   };
 
   const handleZoomOut = () => {
-    setZoomLevel(prev => Math.max(prev - 0.2, 0.5));
+    setZoomLevel(prev => Math.max(prev - 0.2, 0.1));
+    setIsAutoFitted(false);
   };
 
   const handleResetZoom = () => {
     setZoomLevel(1);
+    setPanPosition({ x: 0, y: 0 });
+    setIsAutoFitted(false);
   };
 
+  const autoFitAndCenter = () => {
+    if (!ref.current || !containerRef.current) return;
+
+    const svgElement = ref.current.querySelector('svg');
+    if (!svgElement) return;
+
+    // Get the actual SVG dimensions - prefer viewBox for accuracy
+    let svgWidth = 0, svgHeight = 0;
+    
+    const viewBox = svgElement.getAttribute('viewBox');
+    if (viewBox) {
+      const [, , width, height] = viewBox.split(' ').map(Number);
+      svgWidth = width;
+      svgHeight = height;
+    } else {
+      // Fallback to getBoundingClientRect
+      const svgRect = svgElement.getBoundingClientRect();
+      svgWidth = svgRect.width;
+      svgHeight = svgRect.height;
+    }
+    
+    const containerRect = containerRef.current.getBoundingClientRect();
+
+    // Account for padding (we have p-4 which is 16px on each side)
+    const padding = 32; // 16px * 2
+    const availableWidth = containerRect.width - padding;
+    const availableHeight = containerRect.height - padding;
+
+    // Calculate the scale needed to fit the diagram
+    const scaleX = availableWidth / svgWidth;
+    const scaleY = availableHeight / svgHeight;
+    
+    // Use the smaller scale to ensure it fits in both dimensions, with some margin
+    const optimalScale = Math.min(scaleX, scaleY) * 0.9; // 90% to leave some margin
+    const finalScale = Math.max(0.1, Math.min(3, optimalScale)); // Clamp to our zoom limits
+
+    // Calculate center position with top-left transform origin
+    const scaledWidth = svgWidth * finalScale;
+    const scaledHeight = svgHeight * finalScale;
+    
+    // With transform-origin: top left, we need to account for the scaling offset
+    // The element scales from top-left, so we need to translate to center it
+    const centerX = (availableWidth - scaledWidth) / 2;
+    const centerY = (availableHeight - scaledHeight) / 2;
+
+    // Store diagram dimensions for reference
+    setDiagramDimensions({ width: svgWidth, height: svgHeight });
+
+    // Apply the calculated zoom and position
+    setZoomLevel(finalScale);
+    setPanPosition({ x: centerX, y: centerY });
+    setIsAutoFitted(true);
+
+
+  };
+
+  const handleFitToView = () => {
+    autoFitAndCenter();
+  };
+
+  const handleCenterView = () => {
+    if (!ref.current || !containerRef.current) return;
+
+    const svgElement = ref.current.querySelector('svg');
+    if (!svgElement) return;
+
+    // Use stored dimensions if available, otherwise detect them
+    let svgWidth = diagramDimensions.width;
+    let svgHeight = diagramDimensions.height;
+    
+    if (svgWidth === 0 || svgHeight === 0) {
+      const viewBox = svgElement.getAttribute('viewBox');
+      if (viewBox) {
+        const [, , width, height] = viewBox.split(' ').map(Number);
+        svgWidth = width;
+        svgHeight = height;
+      } else {
+        const svgRect = svgElement.getBoundingClientRect();
+        svgWidth = svgRect.width;
+        svgHeight = svgRect.height;
+      }
+    }
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+
+    const padding = 32;
+    const availableWidth = containerRect.width - padding;
+    const availableHeight = containerRect.height - padding;
+
+    const scaledWidth = svgWidth * zoomLevel;
+    const scaledHeight = svgHeight * zoomLevel;
+    
+    // Center the diagram at current zoom level (transform-origin: top left)
+    const centerX = (availableWidth - scaledWidth) / 2;
+    const centerY = (availableHeight - scaledHeight) / 2;
+
+    setPanPosition({ x: centerX, y: centerY });
+  };
+
+  // Image export functions
+  const downloadSVG = () => {
+    if (!ref.current) return;
+
+    const svgElement = ref.current.querySelector('svg');
+    if (!svgElement) return;
+
+    // Clone SVG to avoid modifying the original
+    const svgClone = svgElement.cloneNode(true) as SVGElement;
+    
+    // Get the actual SVG dimensions (either from viewBox or width/height)
+    const viewBox = svgClone.getAttribute('viewBox');
+    let width, height;
+    
+    if (viewBox) {
+      const [, , w, h] = viewBox.split(' ').map(Number);
+      width = w;
+      height = h;
+    } else {
+      width = svgClone.getAttribute('width') || '800';
+      height = svgClone.getAttribute('height') || '600';
+    }
+
+    // Ensure the SVG has proper dimensions set
+    svgClone.setAttribute('width', width.toString());
+    svgClone.setAttribute('height', height.toString());
+    svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+    // Serialize SVG to string
+    const serializer = new XMLSerializer();
+    const svgString = serializer.serializeToString(svgClone);
+    
+    // Create blob and download
+    const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mermaid-diagram-${Date.now()}.svg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadPNG = async () => {
+    if (!ref.current) return;
+
+    const svgElement = ref.current.querySelector('svg');
+    if (!svgElement) return;
+
+    try {
+      // Clone SVG to avoid modifying the original
+      const svgClone = svgElement.cloneNode(true) as SVGElement;
+      
+      // Get the actual SVG dimensions
+      const viewBox = svgClone.getAttribute('viewBox');
+      let width, height;
+      
+      if (viewBox) {
+        const [, , w, h] = viewBox.split(' ').map(Number);
+        width = w;
+        height = h;
+      } else {
+        width = parseFloat(svgClone.getAttribute('width') || '800');
+        height = parseFloat(svgClone.getAttribute('height') || '600');
+      }
+
+      // Set a reasonable scale factor for better quality
+      const scale = 2; // 2x for crisp images
+      const canvasWidth = width * scale;
+      const canvasHeight = height * scale;
+
+      // Ensure SVG has proper attributes
+      svgClone.setAttribute('width', width.toString());
+      svgClone.setAttribute('height', height.toString());
+      svgClone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+
+      // Convert SVG to data URL
+      const serializer = new XMLSerializer();
+      const svgString = serializer.serializeToString(svgClone);
+      const svgDataUrl = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgString)))}`;
+
+      // Create canvas and draw SVG
+      const canvas = document.createElement('canvas');
+      canvas.width = canvasWidth;
+      canvas.height = canvasHeight;
+      const ctx = canvas.getContext('2d');
+      
+      if (!ctx) {
+        throw new Error('Could not get canvas context');
+      }
+
+      // Set white background (SVGs are transparent by default)
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+
+      // Create image and draw to canvas
+      const img = new window.Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+        
+        // Convert canvas to PNG and download
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `mermaid-diagram-${Date.now()}.png`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+          }
+        }, 'image/png', 0.95); // High quality PNG
+      };
+
+      img.onerror = () => {
+        console.error('Failed to load SVG for PNG conversion');
+        alert('Failed to export PNG. Please try SVG export instead.');
+      };
+
+      img.src = svgDataUrl;
+    } catch (error) {
+      console.error('PNG export error:', error);
+      alert('Failed to export PNG. Please try SVG export instead.');
+    }
+  };
+
+  // Pass download functions to parent component
+  useEffect(() => {
+    if (onDownloadReady) {
+      onDownloadReady(downloadSVG, downloadPNG);
+    }
+  }, [onDownloadReady]);
+
   const handleWheel = (e: React.WheelEvent) => {
+    // Prevent page scrolling but allow diagram zoom
     e.preventDefault();
+    e.stopPropagation();
+    
+    // Calculate zoom delta
     const delta = e.deltaY > 0 ? -0.1 : 0.1;
-    setZoomLevel(prev => Math.max(0.5, Math.min(3, prev + delta)));
+    setZoomLevel(prev => Math.max(0.1, Math.min(3, prev + delta)));
+    setIsAutoFitted(false); // Clear auto-fitted status on manual zoom
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - panPosition.x, y: e.clientY - panPosition.y });
+    setIsAutoFitted(false); // Clear auto-fitted status when user starts panning
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    // Handled by global listeners for better performance
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseEnter = () => {
+    setIsMouseOverDiagram(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsMouseOverDiagram(false);
+    // Don't stop dragging on mouse leave - let global listeners handle it
   };
 
   return (
     <div className="w-full">
-      {/* Zoom Controls */}
+      {/* Zoom and Pan Controls */}
       <div className="mb-3 flex justify-between items-center">
         <div className="flex gap-2">
           <Button
@@ -235,35 +624,92 @@ export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: Merma
             Zoom Out
           </Button>
           <Button
+            onClick={handleFitToView}
+            variant="outline"
+            size="sm"
+            className="text-green-600 border-green-300 hover:bg-green-50"
+          >
+            <Maximize2 className="w-4 h-4 mr-1" />
+            Fit to View
+          </Button>
+          <Button
+            onClick={handleCenterView}
+            variant="outline"
+            size="sm"
+            className="text-purple-600 border-purple-300 hover:bg-purple-50"
+          >
+            <Target className="w-4 h-4 mr-1" />
+            Center
+          </Button>
+          <Button
             onClick={handleResetZoom}
             variant="outline"
             size="sm"
             className="text-gray-600 border-gray-300 hover:bg-gray-50"
           >
             <RotateCcw className="w-4 h-4 mr-1" />
-            Reset
+            Reset View
           </Button>
         </div>
-        <span className="text-sm text-gray-500">
-          Zoom: {Math.round(zoomLevel * 100)}%
-        </span>
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <Move className="w-4 h-4" />
+          <span>Drag to pan • Scroll to zoom • Fit/Center for optimal view</span>
+        </div>
       </div>
 
-      {/* Diagram Container */}
+      {/* Fixed Diagram Viewport */}
       <div 
         ref={containerRef}
-        className="w-full overflow-auto bg-white border rounded-lg cursor-grab active:cursor-grabbing"
-        style={{ minHeight: '200px' }}
+        className="relative w-full bg-white border rounded-lg overflow-hidden select-none"
+        style={{ 
+          height: '500px', // Fixed height for consistent viewport
+          minHeight: '500px',
+          maxHeight: '500px',
+          // Prevent page scrolling when interacting with diagram
+          touchAction: 'none'
+        }}
         onWheel={handleWheel}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
+        {/* Scrollable Inner Container */}
         <div 
-          ref={ref}
-          className="p-4 transition-transform duration-200 ease-out origin-top-left"
-          style={{ 
-            transform: `scale(${zoomLevel})`,
-            transformOrigin: 'top left'
+          className="absolute inset-0 overflow-hidden"
+          style={{
+            cursor: isDragging ? 'grabbing' : 'grab',
           }}
-        />
+        >
+          <div 
+            ref={ref}
+            className="p-4 transition-transform duration-200 ease-out origin-center"
+            style={{ 
+              transform: `translate(${panPosition.x}px, ${panPosition.y}px) scale(${zoomLevel})`,
+              transformOrigin: 'top left',
+              minWidth: '100%',
+              minHeight: '100%',
+              position: 'relative'
+            }}
+          />
+        </div>
+        
+        {/* Viewport Info Overlay */}
+        <div className="absolute top-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded max-w-xs">
+          <div>Zoom: {Math.round(zoomLevel * 100)}% | Pan: {Math.round(panPosition.x)}, {Math.round(panPosition.y)}</div>
+          {diagramDimensions.width > 0 && (
+            <div className="text-gray-300">
+              Diagram: {Math.round(diagramDimensions.width)} × {Math.round(diagramDimensions.height)}px
+            </div>
+          )}
+          {isAutoFitted && (
+            <div className="text-blue-300">🎯 Auto-fitted</div>
+          )}
+          {isMouseOverDiagram && (
+            <div className="text-green-300">🔒 Page scroll locked</div>
+          )}
+        </div>
       </div>
 
       {/* Clean Syntax Error Display */}
@@ -322,4 +768,6 @@ export function MermaidDiagram({ chart, id = 'mermaid-diagram', onRetry }: Merma
       )}
     </div>
   );
-} 
+}
+
+MermaidDiagram.displayName = 'MermaidDiagram'; 

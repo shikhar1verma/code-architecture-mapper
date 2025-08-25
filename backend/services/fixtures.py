@@ -87,7 +87,7 @@ class FixtureLoader:
         """Validate that fixture data has required structure"""
         try:
             # Check required top-level keys
-            if 'example' not in data or 'files' not in data:
+            if 'example' not in data:
                 return False
             
             example_data = data['example']

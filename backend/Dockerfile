@@ -35,5 +35,5 @@ RUN mkdir -p /tmp/repo-architect/tmp
 # Expose port
 EXPOSE 8000
 
-# Run the startup script which loads fixtures and starts the app
-CMD ["./backend/scripts/startup.sh"] 
+# Start the application directly without fixture loading
+CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000", "--reload"] 

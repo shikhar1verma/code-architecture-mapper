@@ -1,0 +1,447 @@
+{
+  "example": {
+    "name": "Document AI Chat",
+    "repo_url": "https://github.com/shikhar1verma/document-ai-chat",
+    "repo_owner": "shikhar1verma",
+    "repo_name": "document-ai-chat",
+    "default_branch": "dev",
+    "commit_sha": "982cbe7f468ca8fc4cdecb6e22df1657d874e104",
+    "status": "complete",
+    "message": "Analysis complete",
+    "language_stats": {
+      "js": 81.2,
+      "python": 18.8
+    },
+    "loc_total": 1027,
+    "file_count": 16,
+    "metrics": {
+      "graph": {
+        "edges": [{
+          "source": "frontend/src/components/ChatWindow.js",
+          "target": "frontend/src/components/ChatMessage"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "logging"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "os"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "re"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "uuid"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "tempfile"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "shutil"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "typing"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "psycopg"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "dotenv"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "langchain_community"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "langchain_google_genai"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "langchain"
+        }, {
+          "source": "backend/ingest.py",
+          "target": "pgvector"
+        }, {
+          "source": "backend/rag.py",
+          "target": "logging"
+        }, {
+          "source": "backend/rag.py",
+          "target": "os"
+        }, {
+          "source": "backend/rag.py",
+          "target": "typing"
+        }, {
+          "source": "backend/rag.py",
+          "target": "psycopg"
+        }, {
+          "source": "backend/rag.py",
+          "target": "dotenv"
+        }, {
+          "source": "backend/rag.py",
+          "target": "langchain_google_genai"
+        }, {
+          "source": "backend/rag.py",
+          "target": "pgvector"
+        }, {
+          "source": "backend/main.py",
+          "target": "os"
+        }, {
+          "source": "backend/main.py",
+          "target": "shutil"
+        }, {
+          "source": "backend/main.py",
+          "target": "tempfile"
+        }, {
+          "source": "backend/main.py",
+          "target": "uuid"
+        }, {
+          "source": "backend/main.py",
+          "target": "fastapi"
+        }, {
+          "source": "backend/main.py",
+          "target": "pydantic"
+        }, {
+          "source": "backend/main.py",
+          "target": "secure"
+        }, {
+          "source": "backend/main.py",
+          "target": "slowapi"
+        }, {
+          "source": "backend/main.py",
+          "target": "ingest"
+        }, {
+          "source": "backend/main.py",
+          "target": "rag"
+        }],
+        "nodes": [{
+          "id": "frontend/postcss.config.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/next.config.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/tailwind.config.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/pages/_app.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/pages/index.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/pages/about.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/components/ChatMessage.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/components/FileUploader.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/components/Footer.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/components/ChatWindow.js",
+          "fan_in": 0,
+          "fan_out": 1
+        }, {
+          "id": "frontend/src/components/Navbar.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/components/Layout.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "frontend/src/lib/api.js",
+          "fan_in": 0,
+          "fan_out": 0
+        }, {
+          "id": "backend/ingest.py",
+          "fan_in": 0,
+          "fan_out": 13
+        }, {
+          "id": "backend/rag.py",
+          "fan_in": 0,
+          "fan_out": 7
+        }, {
+          "id": "backend/main.py",
+          "fan_in": 0,
+          "fan_out": 10
+        }, {
+          "id": "frontend/src/components/ChatMessage",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "logging",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "os",
+          "fan_in": 3,
+          "fan_out": 0
+        }, {
+          "id": "re",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "uuid",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "tempfile",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "shutil",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "typing",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "psycopg",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "dotenv",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "langchain_community",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "langchain_google_genai",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "langchain",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "pgvector",
+          "fan_in": 2,
+          "fan_out": 0
+        }, {
+          "id": "fastapi",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "pydantic",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "secure",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "slowapi",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "ingest",
+          "fan_in": 1,
+          "fan_out": 0
+        }, {
+          "id": "rag",
+          "fan_in": 1,
+          "fan_out": 0
+        }]
+      },
+      "central_files": [{
+        "path": "backend/ingest.py",
+        "fan_in": 0,
+        "fan_out": 13,
+        "degree_centrality": 0.3714
+      }, {
+        "path": "backend/main.py",
+        "fan_in": 0,
+        "fan_out": 10,
+        "degree_centrality": 0.2857
+      }, {
+        "path": "backend/rag.py",
+        "fan_in": 0,
+        "fan_out": 7,
+        "degree_centrality": 0.2
+      }, {
+        "path": "frontend/src/components/ChatWindow.js",
+        "fan_in": 0,
+        "fan_out": 1,
+        "degree_centrality": 0.0286
+      }, {
+        "path": "frontend/src/components/ChatMessage",
+        "fan_in": 1,
+        "fan_out": 0,
+        "degree_centrality": 0.0286
+      }, {
+        "path": "frontend/postcss.config.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/next.config.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/tailwind.config.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/pages/_app.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/pages/index.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/pages/about.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/components/ChatMessage.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/components/FileUploader.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/components/Footer.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/components/Navbar.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/components/Layout.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }, {
+        "path": "frontend/src/lib/api.js",
+        "fan_in": 0,
+        "fan_out": 0,
+        "degree_centrality": 0.0
+      }],
+      "dependency_analysis": {
+        "summary": {
+          "categories": ["Standard Library", "Frontend/UI", "External Libraries", "Utilities", "Build/Config", "Backend/API"],
+          "external_count": 35,
+          "internal_count": 1
+        },
+        "internal_edges": [{
+          "dst": "frontend/src/components/ChatMessage",
+          "src": "frontend/src/components/ChatWindow.js"
+        }],
+        "external_groups": {
+          "Utilities": [
+            ["backend/ingest.py", "shutil"],
+            ["backend/main.py", "shutil"]
+          ],
+          "Backend/API": [
+            ["backend/main.py", "fastapi"],
+            ["backend/main.py", "fastapi"],
+            ["backend/main.py", "slowapi"],
+            ["backend/main.py", "slowapi"],
+            ["backend/main.py", "slowapi"]
+          ],
+          "Frontend/UI": [
+            ["backend/ingest.py", "uuid"],
+            ["backend/main.py", "uuid"]
+          ],
+          "Build/Config": [
+            ["backend/ingest.py", "dotenv"],
+            ["backend/rag.py", "dotenv"]
+          ],
+          "External Libraries": [
+            ["backend/ingest.py", "tempfile"],
+            ["backend/ingest.py", "psycopg"],
+            ["backend/ingest.py", "psycopg"],
+            ["backend/ingest.py", "langchain_community"],
+            ["backend/ingest.py", "langchain_google_genai"],
+            ["backend/ingest.py", "langchain"],
+            ["backend/ingest.py", "pgvector"],
+            ["backend/rag.py", "psycopg"],
+            ["backend/rag.py", "psycopg"],
+            ["backend/rag.py", "langchain_google_genai"]
+          ]
+        }
+      }
+    },
+    "components": [{
+      "apis": [{
+        "file": "frontend/src/components/ChatWindow.js",
+        "name": "postChat"
+      }],
+      "name": "Chat UI",
+      "risks": ["Potential performance degradation with auto-scrolling if message volume becomes very high.", "Security and data integrity risks related to storing and retrieving chat-related information directly from localStorage without explicit validation or strong isolation.", "Lack of explicit error handling for the postChat API call in the provided snippet could lead to ungraceful failures."],
+      "tests": ["N/A - no test files provided in the snippets."],
+      "purpose": "Provides the interactive user interface for a chat application, including displaying messages, handling user input, and integrating with backend chat services.",
+      "key_files": [{
+        "path": "frontend/src/components/ChatWindow.js",
+        "reason": "Main React component orchestrating chat state, message display, user input, and API interactions."
+      }, {
+        "path": "frontend/src/components/ChatMessage",
+        "reason": "React component responsible for rendering individual chat messages."
+      }, {
+        "path": "frontend/tailwind.config.js",
+        "reason": "Configures the visual styling and theme for the chat interface components using Tailwind CSS."
+      }],
+      "dependencies": ["react", "react-icons", "@/lib/api", "tailwindcss"]
+    }, {
+      "apis": [{
+        "file": "backend/ingest.py",
+        "name": "ingest_file"
+      }, {
+        "file": "backend/ingest.py",
+        "name": "create_upload"
+      }, {
+        "file": "backend/ingest.py",
+        "name": "update_progress"
+      }, {
+        "file": "backend/ingest.py",
+        "name": "_get_connection"
+      }],
+      "name": "IngestionService",
+      "risks": ["Scalability bottlenecks during high-volume document processing due to intensive I/O, CPU usage for embedding generation, or database write contention.", "Cost implications associated with external API calls for embedding generation (GoogleGenerativeAIEmbeddings) as document volume increases.", "Potential for data inconsistencies or loss if ingestion processes fail midway without robust transaction management or error recovery mechanisms.", "Security risks if document sanitization is insufficient, potentially allowing malicious content into the database."],
+      "tests": ["tests/unit/test_ingest.py", "tests/integration/test_document_ingestion_flow.py"],
+      "purpose": "Manages the processing of documents (e.g., PDFs), including loading, text splitting, embedding generation, and storing the processed data in a vector database.",
+      "key_files": [{
+        "path": "backend/ingest.py",
+        "reason": "This file contains the core logic for document loading using PyPDFLoader, text sanitization, chunking with RecursiveCharacterTextSplitter, embedding generation with GoogleGenerativeAIEmbeddings, and database interactions for storing document content and vectors."
+      }],
+      "dependencies": ["psycopg", "pgvector", "langchain_community.document_loaders.PyPDFLoader", "langchain_google_genai.GoogleGenerativeAIEmbeddings", "langchain.text_splitter.RecursiveCharacterTextSplitter", "python-dotenv"]
+    }],
+    "architecture_md": "# Architecture Overview\n\n## Overview\n\nThis repository implements a Document-AI Chat application, allowing users to interact with uploaded documents via a chat interface using Retrieval-Augmented Generation (RAG). The system follows a client-server architecture. The frontend is built with JavaScript (Next.js\/React), comprising 81.2% of the codebase, while the backend is implemented in Python (FastAPI), accounting for 18.8%.\n\nThe primary functions include ingesting PDF documents, storing their processed content, and enabling a conversational interface to query the document content.\n\n## Component Map\n\nThe system is composed of the following key components:\n\n*   **Frontend (Next.js\/React)**:\n    *   **Purpose**: Provides the user interface for document upload, chat interaction, and displaying responses.\n    *   **Technologies**: Next.js, React, Tailwind CSS (`tailwind.config.js`, `postcss.config.js`), `next-themes` for theme management.\n    *   **Key Files**:\n        *   `frontend\/src\/pages\/_app.js`: Global application setup, layout, and theme provider.\n        *   `frontend\/src\/pages\/index.js`: Main page integrating `FileUploader` and `ChatWindow`.\n        *   `frontend\/src\/components\/FileUploader.js`: Handles document selection and initiation of the upload process.\n        *   `frontend\/src\/components\/ChatWindow.js`: Manages chat messages, user input, and communicates with the backend for chat queries. Persists upload info in `localStorage`.\n        *   `frontend\/src\/components\/ChatMessage.js`: Renders individual chat messages, supporting Markdown.\n        *   `frontend\/src\/lib\/api.js`: Utility for making API calls to the backend.\n\n*   **Backend (FastAPI\/Python)**:\n    *   **Purpose**: Exposes RESTful API endpoints for document ingestion, status tracking, and chat functionality.\n    *   **Technologies**: FastAPI, Python, `psycopg` for PostgreSQL interaction, `langchain_community`, `langchain_google_genai`, `pgvector`.\n    *   **Key Files**:\n        *   `backend\/main.py`: FastAPI application entry point. Configures CORS, security headers (`secure`), rate limiting (`slowapi`), and routes requests to ingestion and RAG modules.\n        *   `backend\/ingest.py`: Handles the document ingestion pipeline. Loads PDFs (`PyPDFLoader`), sanitizes text, splits into chunks (`RecursiveCharacterTextSplitter`), generates vector embeddings using Google Generative AI, and stores them in PostgreSQL with `pgvector`. Provides helpers for upload progress.\n        *   `backend\/rag.py`: Implements Retrieval-Augmented Generation. Retrieves relevant document chunks from PostgreSQL based on user queries using Google Generative AI embeddings, and synthesizes answers using a Google Generative AI model.\n\n*   **Database (PostgreSQL with pgvector extension)**:\n    *   **Purpose**: Stores ingested document text chunks and their corresponding vector embeddings for efficient similarity search.\n    *   **Technologies**: PostgreSQL, `pgvector` extension.\n    *   **Interaction**: Accessed by `backend\/ingest.py` (for writing) and `backend\/rag.py` (for querying) via `psycopg`.\n\n*   **External Services (Google Generative AI)**:\n    *   **Purpose**: Provides essential AI capabilities for embedding generation and conversational response generation.\n    *   **Technologies**: `GoogleGenerativeAIEmbeddings` (for text embedding), `GoogleGenerativeAI` (for text generation).\n    *   **Interaction**: Used by `backend\/ingest.py` during document processing and by `backend\/rag.py` for retrieval and answer generation. API key (`GEMINI_API_KEY`) is loaded from environment variables.\n\n## Data Flow\n\n1.  **Document Upload**:\n    *   A user selects a PDF file via `frontend\/src\/components\/FileUploader.js`.\n    *   The file is sent to the `\/upload` endpoint exposed by `backend\/main.py`.\n    *   `backend\/main.py` initiates a background task, calling `backend\/ingest.py` to process the file.\n    *   `backend\/ingest.py` loads the PDF, splits it into text chunks, generates vector embeddings using Google Generative AI, and stores these chunks and embeddings in the PostgreSQL database. Progress is tracked (`create_upload`, `update_progress`).\n    *   The frontend monitors upload status, potentially via polling the backend, and stores associated `docchat_info` in `localStorage`.\n\n2.  **Chat Interaction**:\n    *   A user types a question into the `frontend\/src\/components\/ChatWindow.js`.\n    *   The question is sent to the `\/chat` endpoint exposed by `backend\/main.py` via `frontend\/src\/lib\/api.js`.\n    *   `backend\/main.py` delegates the question to `backend\/rag.py`.\n    *   `backend\/rag.py` generates an embedding for the question using Google Generative AI embeddings.\n    *   It then queries the PostgreSQL database (using `pgvector`) to retrieve the most semantically similar document chunks related to the question.\n    *   `backend\/rag.py` feeds the original question and the retrieved document chunks into a Google Generative AI model to generate a coherent answer.\n    *   The generated answer is returned to `backend\/main.py`, which then sends it back to the `frontend\/src\/components\/ChatWindow.js` to be displayed.\n\n## Risks\n\n*   **External Dependency**: Heavy reliance on Google Generative AI for core AI functionalities (embeddings, generation). Downtime, performance issues, or cost changes from this external service directly impact the application.\n*   **Security**:\n    *   Exposure of `DATABASE_URL` and `GEMINI_API_KEY` via environment variables requires secure management of these secrets in production environments.\n    *   CORS configuration in `backend\/main.py` requires careful management of `ALLOWED_ORIGINS` to prevent unauthorized cross-origin requests.\n    *   PDF ingestion (`backend\/ingest.py`) involves parsing external files, which could pose risks if not properly secured against malicious content, though text sanitization (`_sanitize`) is present.\n*   **Scalability**: While `slowapi` provides rate limiting, the ingestion process (PDF parsing, embedding generation, database writes) and complex RAG queries can be resource-intensive. High concurrent usage might strain the database or the external AI API rate limits.\n*   **Data Quality**: The quality of RAG answers is highly dependent on the quality of ingested documents, the chunking strategy (`RecursiveCharacterTextSplitter`), embedding model, and generative model. Poor document quality or ineffective chunking can lead to irrelevant or incorrect answers.\n\n## How to Extend\n\n*   **Support Additional Document Types**: Extend `backend\/ingest.py` by integrating other `langchain_community.document_loaders` (e.g., for DOCX, TXT, HTML) to process a wider range of document formats.\n*   **Alternate LLM\/Embedding Providers**: Modify `backend\/ingest.py` and `backend\/rag.py` to support different LLM providers (e.g., OpenAI, Anthropic, local models) by swapping `langchain_google_genai` components with alternatives.\n*   **Enhanced Chat Features**: Add features to `frontend\/src\/components\/ChatWindow.js` such as chat history persistence, multi-document chat, or user authentication for personalized experiences.\n*   **Improved Ingestion Feedback**: Enhance `backend\/main.py` and `backend\/ingest.py` to provide more granular, real-time progress updates during ingestion, reflected in `frontend\/src\/components\/FileUploader.js`.\n*   **Advanced RAG Techniques**: Implement more sophisticated retrieval strategies (e.g., hybrid search, re-ranking) or prompt engineering techniques within `backend\/rag.py` to improve answer quality and relevance.\n*   **User Management and Permissions**: Introduce an authentication and authorization layer in the FastAPI backend (`backend\/main.py`) to manage users, restrict document access, and maintain separate chat histories.",
+    "mermaid_modules": "%%{init: { 'theme': 'base', 'themeVariables': { 'primaryColor': '#f8fafc', 'primaryTextColor': '#0f172a', 'lineColor': '#64748b', 'textColor': '#1e293b', 'background': '#ffffff', 'secondaryColor': '#f1f5f9', 'fontFamily': 'Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif', 'fontSize': '14px' }}}%%\nflowchart LR\n%% Module Dependencies\nsubgraph Backend[Backend]\ndirection TB\nbackend_ingest_py[\"Ingest.py\"]:::module\nbackend_main_py[\"Main.py\"]:::module\nbackend_rag_py[\"Rag.py\"]:::module\nfastapi[\"Fastapi\"]:::service\nslowapi[\"Slowapi\"]:::service\nend\nsubgraph Configuration[Configuration]\ndirection TB\ndotenv[\"Dotenv\"]:::module\nend\nsubgraph Frontend[Frontend]\ndirection TB\nfrontend_src_components_ChatMessage[\"Chatmessage\"]:::component\nfrontend_src_components_ChatWindow_js[\"Chatwindow.js\"]:::component\nuuid[\"Uuid\"]:::module\nend\nsubgraph Core[Core]\ndirection TB\ningest[\"Ingest\"]:::module\nlangchain[\"Langchain\"]:::module\nlangchain_community[\"Langchain Community\"]:::module\nlangchain_google_genai[\"Langchain Google Genai\"]:::module\nlogging[\"Logging\"]:::module\nos[\"Os\"]:::module\npgvector[\"Pgvector\"]:::module\npsycopg[\"Psycopg\"]:::module\npydantic[\"Pydantic\"]:::module\nrag[\"Rag\"]:::module\nre[\"Re\"]:::module\nsecure[\"Secure\"]:::module\ntempfile[\"Tempfile\"]:::module\ntyping[\"Typing\"]:::module\nend\nsubgraph Utilities[Utilities]\ndirection TB\nshutil[\"Shutil\"]:::utility\nend\nfrontend_src_components_ChatWindow_js --> frontend_src_components_ChatMessage\nbackend_ingest_py --> logging\nbackend_ingest_py --> os\nbackend_ingest_py --> re\nbackend_ingest_py --> uuid\nbackend_ingest_py --> tempfile\nbackend_ingest_py --> shutil\nbackend_ingest_py --> typing\nbackend_ingest_py --> psycopg\nbackend_ingest_py --> dotenv\nbackend_ingest_py --> langchain_community\nbackend_ingest_py --> langchain_google_genai\nbackend_ingest_py --> langchain\nbackend_ingest_py --> pgvector\nbackend_rag_py --> logging\nbackend_rag_py --> os\nbackend_rag_py --> typing\nbackend_rag_py --> psycopg\nbackend_rag_py --> dotenv\nbackend_rag_py --> langchain_google_genai\nbackend_rag_py --> pgvector\nbackend_main_py --> os\nbackend_main_py --> shutil\nbackend_main_py --> tempfile\nbackend_main_py --> uuid\nbackend_main_py --> fastapi\nbackend_main_py --> pydantic\nbackend_main_py --> secure\nbackend_main_py --> slowapi\nbackend_main_py --> ingest\nbackend_main_py --> rag\nclassDef module fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af;\nclassDef component fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#15803d;\nclassDef config fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e;\nclassDef test fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#7c3aed;\nclassDef service fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e;\nclassDef db fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12;\nclassDef cache fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#064e3b;\nclassDef queue fill:#fae8ff,stroke:#a855f7,stroke-width:2px,color:#6b21a8;\nclassDef ext fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#991b1b;\nclassDef folder fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px,color:#334155;\nclassDef utility fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#0369a1;\nlinkStyle default stroke:#64748b,stroke-width:1.5px;",
+    "mermaid_folders": "%%{init: { 'theme': 'base', 'themeVariables': { 'primaryColor': '#f8fafc', 'primaryTextColor': '#0f172a', 'lineColor': '#64748b', 'textColor': '#1e293b', 'background': '#ffffff', 'secondaryColor': '#f1f5f9', 'fontFamily': 'Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif', 'fontSize': '14px' }}}%%\nflowchart LR\n%% Project Structure\nsubgraph Backend[Backend]\ndirection TB\nbackend[\"backend\"]:::folder\nbackend_ingest_py[\"ingest.py\"]:::module\nbackend_main_py[\"main.py\"]:::module\nbackend_rag_py[\"rag.py\"]:::module\nend\nsubgraph Frontend[Frontend]\ndirection TB\nfrontend[\"frontend\"]:::folder\nfrontend_src[\"src\"]:::folder\nfrontend_src_components[\"components\"]:::folder\nfrontend_src_lib[\"lib\"]:::folder\nfrontend_src_pages[\"pages\"]:::folder\nfrontend_next_config_js[\"next.config.js\"]:::config\nfrontend_postcss_config_js[\"postcss.config.js\"]:::config\nfrontend_tailwind_config_js[\"tailwind.config.js\"]:::config\nend\nbackend --> backend_ingest_py\nfrontend_src --> frontend_src_components\nfrontend --> frontend_src\nfrontend --> frontend_tailwind_config_js\nfrontend --> frontend_next_config_js\nfrontend --> frontend_postcss_config_js\nfrontend_src --> frontend_src_pages\nfrontend_src --> frontend_src_lib\nbackend --> backend_rag_py\nbackend --> backend_main_py\nclassDef module fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af;\nclassDef component fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#15803d;\nclassDef config fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e;\nclassDef test fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#7c3aed;\nclassDef service fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e;\nclassDef db fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12;\nclassDef cache fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#064e3b;\nclassDef queue fill:#fae8ff,stroke:#a855f7,stroke-width:2px,color:#6b21a8;\nclassDef ext fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#991b1b;\nclassDef folder fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px,color:#334155;\nclassDef utility fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#0369a1;\nlinkStyle default stroke:#64748b,stroke-width:1.5px;",
+    "mermaid_modules_simple": "flowchart LR\n    %% Class Definitions for Components\n    classDef component fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#15803d;\n    classDef service fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e;\n    classDef db fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12;\n    classDef ext fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#991b1b;\n    linkStyle default stroke:#64748b,stroke-width:1.5px;\n\n    %% Main Architectural Components\n    Frontend[\"User Interface<br>(Next.js\/React)\"]:::component\n    Backend[\"Backend Service<br>(FastAPI\/Python)\"]:::service\n    Database[\"PostgreSQL<br>(pgvector)\"]:::db\n    GoogleGenAI[\"Google Generative AI<br>(Embeddings & LLM)\"]:::ext\n\n    %% Data Flow: Document Upload Process\n    Frontend -- \"1. Upload PDF (\/upload)\" --> Backend\n    Backend -- \"2. Generate Embeddings\" --> GoogleGenAI\n    Backend -- \"3. Store Chunks & Embeddings\" --> Database\n\n    %% Data Flow: Chat Interaction (RAG) Process\n    Frontend -- \"4. User Query (\/chat)\" --> Backend\n    Backend -- \"5. Embed Query\" --> GoogleGenAI\n    Backend -- \"6. Retrieve Similar Chunks\" --> Database\n    Backend -- \"7. Generate Response (RAG)\" --> GoogleGenAI\n    GoogleGenAI -- \"7b. Generated Answer\" --> Backend\n    Backend -- \"8. Return Answer\" --> Frontend",
+    "mermaid_modules_balanced": "flowchart LR\n\n    %% Define custom classes for visual consistency and architectural meaning\n    classDef component fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#15803d;\n    classDef service fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e;\n    classDef db fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12;\n    classDef ext fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#991b1b;\n    classDef config fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e;\n    classDef utility fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#0369a1;\n    classDef user fill:#e0e7ff,stroke:#4f46e5,stroke-width:2px,color:#312e81;\n    linkStyle default stroke:#64748b,stroke-width:1.5px,fill:none;\n\n    %% Main architectural layers grouped into subgraphs\n    subgraph User Interaction\n        USR(User)\n    end\n\n    subgraph Frontend[\"Next.js\/React Application\"]\n        direction TB\n        FE_PAGES[\"Pages & Layout<br>(e.g., _app.js, index.js)\"]:::component\n        FE_COMPONENTS[\"UI Components<br>(FileUploader, ChatWindow, ChatMessage)\"]:::component\n        FE_API_CLIENT[\"API Client Utility<br>(lib\/api.js)\"]:::utility\n        FE_CONFIG[\"Frontend Config<br>(next.config, tailwind.config)\"]:::config\n        \n        FE_PAGES -- \"Composes UI from\" --> FE_COMPONENTS\n        FE_COMPONENTS -- \"Makes API Calls via\" --> FE_API_CLIENT\n        FE_COMPONENTS -- \"Persists info in localStorage\" --> FE_COMPONENTS\n        FE_CONFIG -- \"Configures Styling & Build\" --> FE_PAGES\n        FE_CONFIG -- \"Configures Styling & Build\" --> FE_COMPONENTS\n    end\n\n    subgraph Backend[\"FastAPI\/Python Services\"]\n        direction TB\n        BE_API_GW[\"API Gateway<br>(main.py)\"]:::service\n        BE_INGEST[\"Ingestion Service<br>(ingest.py)\"]:::service\n        BE_RAG[\"RAG Service<br>(rag.py)\"]:::service\n\n        BE_API_GW -- \"Delegates Document Ingestion Tasks\" --> BE_INGEST\n        BE_API_GW -- \"Delegates Chat Query Processing\" --> BE_RAG\n    end\n\n    subgraph Data Layer\n        DB[PostgreSQL<br>+ pgvector]:::db\n    end\n\n    subgraph External Dependencies\n        EXT_GOOGLE_AI[\"Google Generative AI<br>(Embeddings & LLM)\"]:::ext\n    end\n\n    %% Data Flow & Primary Interactions (Numbered for Storytelling)\n\n    %% 1. Document Upload Flow\n    USR -- \"1. Selects & Uploads PDF File\" --> FE_COMPONENTS\n    FE_COMPONENTS -- \"2. POST \/upload Request (File)\" --> FE_API_CLIENT\n    FE_API_CLIENT -- \"3. Forwards HTTP Request\" --> BE_API_GW\n    BE_API_GW -- \"4. Initiates Background Ingestion Task\" --> BE_INGEST\n    BE_INGEST -- \"5. Loads PDF, Sanitizes, Chunks Text\" --> BE_INGEST\n    BE_INGEST -- \"6. Generates Vector Embeddings\" --> EXT_GOOGLE_AI\n    EXT_GOOGLE_AI -- \"7. Returns Embeddings to Ingestion\" --> BE_INGEST\n    BE_INGEST -- \"8. Stores Chunks & Embeddings in DB\" --> DB\n\n    %% Upload Status Monitoring (Asynchronous Feedback)\n    BE_API_GW -.\"Provides Upload Status (via Polling API)\".-> FE_API_CLIENT\n    FE_API_CLIENT -.\"Reports Status Updates to UI\".-> FE_COMPONENTS\n\n    %% 2. Chat Interaction Flow\n    USR -- \"9. Enters Chat Question\" --> FE_COMPONENTS\n    FE_COMPONENTS -- \"10. POST \/chat Request (Query)\" --> FE_API_CLIENT\n    FE_API_CLIENT -- \"11. Forwards HTTP Request\" --> BE_API_GW\n    BE_API_GW -- \"12. Delegates Query to RAG Service\" --> BE_RAG\n    BE_RAG -- \"13. Generates Query Embedding\" --> EXT_GOOGLE_AI\n    EXT_GOOGLE_AI -- \"14. Returns Query Embedding\" --> BE_RAG\n    BE_RAG -- \"15. Retrieves Similar Document Chunks\" --> DB\n    DB -- \"16. Returns Relevant Context Chunks\" --> BE_RAG\n    BE_RAG -- \"17. Synthesizes Answer (LLM Inference)\" --> EXT_GOOGLE_AI\n    EXT_GOOGLE_AI -- \"18. Returns Generated Answer\" --> BE_RAG\n    BE_RAG -- \"19. Sends Final Answer Back\" --> BE_API_GW\n    BE_API_GW -- \"20. Sends HTTP Response\" --> FE_API_CLIENT\n    FE_API_CLIENT -- \"21. Displays Answer in Chat\" --> FE_COMPONENTS",
+    "mermaid_modules_detailed": "flowchart LR\n    %% Class Definitions\n    classDef module fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af;\n    classDef component fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#15803d;\n    classDef config fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e;\n    classDef test fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#7c3aed;\n    classDef service fill:#e0f2fe,stroke:#0369a1,stroke-width:2px,color:#0c4a6e;\n    classDef db fill:#fef9c3,stroke:#ca8a04,stroke-width:2px,color:#713f12;\n    classDef cache fill:#ecfdf5,stroke:#059669,stroke-width:2px,color:#064e3b;\n    classDef queue fill:#fae8ff,stroke:#a855f7,stroke-width:2px,color:#6b21a8;\n    classDef ext fill:#fee2e2,stroke:#dc2626,stroke-width:2px,color:#991b1b;\n    classDef folder fill:#f1f5f9,stroke:#64748b,stroke-width:1.5px,color:#334155;\n    classDef utility fill:#f0f9ff,stroke:#0284c7,stroke-width:2px,color:#0369a1;\n    linkStyle default stroke:#64748b,stroke-width:1.5px;\n\n    %% Nodes and Subgraphs\n    subgraph Frontend[\"Frontend (Next.js\/React)\"]\n        direction TB\n        FE_App[\"_app.js (Global Setup)\"]:::component\n        FE_Index[\"index.js (Main Page)\"]:::component\n        FE_Uploader[\"FileUploader.js\"]:::component\n        FE_ChatWin[\"ChatWindow.js\"]:::component\n        FE_ChatMsg[\"ChatMessage.js\"]:::component\n        FE_API[\"api.js (API Client)\"]:::utility\n\n        FE_App -- \"Configures & wraps\" --> FE_Index\n        FE_Index -- \"Integrates\" --> FE_Uploader\n        FE_Index -- \"Integrates\" --> FE_ChatWin\n        FE_ChatWin -- \"Renders\" --> FE_ChatMsg\n        FE_ChatWin -- \"Persists upload info in\" --> LocalStorage[(localStorage)]:::cache\n    end\n\n    subgraph Backend[\"Backend (FastAPI\/Python)\"]\n        direction TB\n        BE_Main[\"main.py (FastAPI App)\"]:::service\n        BE_Ingest[\"ingest.py (Doc Ingestion Pipeline)\"]:::service\n        BE_RAG[\"rag.py (Retrieval-Augmented Generation)\"]:::service\n        \n        BE_Main -- \"Routes \/upload to\" --> BE_Ingest\n        BE_Main -- \"Routes \/chat to\" --> BE_RAG\n    end\n\n    DB_PG[\"PostgreSQL (pgvector)\"]:::db\n    EXT_Embed[\"Google Generative AI Embeddings\"]:::ext\n    EXT_Gen[\"Google Generative AI (Gemini Model)\"]:::ext\n\n    %% Data Flow \/ Dependencies\n\n    %% Document Upload Flow\n    FE_Uploader -- \"1. User selects PDF\" --> FE_API\n    FE_API -- \"2. POST \/upload\" --> BE_Main\n    BE_Main -- \"3. Initiates ingestion (background task)\" --> BE_Ingest\n    BE_Ingest -- \"4. Generates vector embeddings\" --> EXT_Embed\n    BE_Ingest -- \"5. Stores chunks & embeddings\" --> DB_PG\n    FE_ChatWin -- \"Monitors upload status\" --> BE_Main\n\n    %% Chat Interaction Flow\n    FE_ChatWin -- \"6. Sends user query\" --> FE_API\n    FE_API -- \"7. POST \/chat\" --> BE_Main\n    BE_Main -- \"8. Delegates query\" --> BE_RAG\n    BE_RAG -- \"9. Embeds query\" --> EXT_Embed\n    BE_RAG -- \"10. Retrieves similar chunks\" --> DB_PG\n    BE_RAG -- \"11. Synthesizes answer\" --> EXT_Gen\n    BE_RAG -- \"12. Returns answer\" --> BE_Main\n    BE_Main -- \"13. Sends answer\" --> FE_API\n    FE_API -- \"14. Displays answer\" --> FE_ChatWin",
+    "token_budget": {
+      "chunks": 0,
+      "gen_calls": 3,
+      "embed_calls": 0
+    },
+    "description": "This app will be question answer chat app with document. You can upload your document then app can read it and you can have question answers with them."
+  }
+}

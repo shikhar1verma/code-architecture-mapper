@@ -9,7 +9,7 @@ import { ComponentsView } from '@/components/ComponentsView';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
-import { Download, FileText, GitBranch, Code2, BarChart3, Eye, Zap, Settings, AlertCircle } from 'lucide-react';
+import { Download, FileText, GitBranch, Code2, BarChart3, Eye, Zap, Settings, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { useState } from 'react';
 import { generateDiagramOnDemand, retryMermaidDiagram } from '@/lib/api';
 
@@ -51,6 +51,8 @@ export function AnalysisResults({ result, analysisId }: AnalysisResultsProps) {
   const [loadingDiagrams, setLoadingDiagrams] = useState<Record<string, boolean>>({});
   const [diagramMessages, setDiagramMessages] = useState<Record<string, string>>({});
   const [retryingDiagrams, setRetryingDiagrams] = useState<Record<string, boolean>>({});
+  const [downloadSVG, setDownloadSVG] = useState<(() => void) | null>(null);
+  const [downloadPNG, setDownloadPNG] = useState<(() => void) | null>(null);
   
   // const analysisId = getAnalysisId(result); // This line is removed as analysisId is now a prop
 
@@ -179,6 +181,11 @@ export function AnalysisResults({ result, analysisId }: AnalysisResultsProps) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadReady = (svgDownloader: () => void, pngDownloader: () => void) => {
+    setDownloadSVG(() => svgDownloader);
+    setDownloadPNG(() => pngDownloader);
   };
 
   const getCurrentDiagram = () => {
@@ -385,14 +392,36 @@ export function AnalysisResults({ result, analysisId }: AnalysisResultsProps) {
                 <h3 className="text-lg font-semibold text-gray-900">
                   {getCurrentDiagramTitle()} Dependencies
                 </h3>
-                <Button
-                  onClick={() => downloadMermaid(getCurrentDiagram(), `dependencies-${selectedDiagramMode}.mmd`)}
-                  variant="outline"
-                  size="sm"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => downloadMermaid(getCurrentDiagram(), `dependencies-${selectedDiagramMode}.mmd`)}
+                    variant="outline"
+                    size="sm"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Mermaid
+                  </Button>
+                  <Button
+                    onClick={downloadSVG || (() => {})}
+                    variant="outline"
+                    size="sm"
+                    disabled={!downloadSVG}
+                    className="text-orange-600 border-orange-300 hover:bg-orange-50 disabled:opacity-50"
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    SVG
+                  </Button>
+                  <Button
+                    onClick={downloadPNG || (() => {})}
+                    variant="outline"
+                    size="sm"
+                    disabled={!downloadPNG}
+                    className="text-orange-600 border-orange-300 hover:bg-orange-50 disabled:opacity-50"
+                  >
+                    <ImageIcon className="w-4 h-4 mr-2" />
+                    PNG
+                  </Button>
+                </div>
               </div>
               {getCurrentDiagram() ? (
                 <>
@@ -401,6 +430,7 @@ export function AnalysisResults({ result, analysisId }: AnalysisResultsProps) {
                     chart={getCurrentDiagram()} 
                     id={`dependencies-${selectedDiagramMode}`} 
                     onRetry={retryDiagram}
+                    onDownloadReady={handleDownloadReady}
                   />
                   {/* Show quota limitation message if available */}
                   {diagramMessages[selectedDiagramMode] && (

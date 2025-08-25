@@ -11,7 +11,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+          'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
           {
             'bg-blue-600 text-white hover:bg-blue-700': variant === 'default',
             'border border-gray-300 bg-white text-gray-900 hover:bg-gray-50': variant === 'outline',
@@ -19,8 +19,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           },
           {
             'h-10 px-4 py-2': size === 'default',
-            'h-9 px-3': size === 'sm',
-            'h-11 px-8': size === 'lg',
+            'h-9 px-4 py-2': size === 'sm',
+            'h-11 px-8 py-3': size === 'lg',
           },
           className
         )}

@@ -570,5 +570,18 @@ def _safe(s: str) -> str:
     return re.sub(r"[^A-Za-z0-9_]", "_", s)
 
 def _escape(s: str) -> str:
-    """Escape double quotes inside edge labels"""
-    return s.replace('"', '\\"') 
+    """Escape special characters in edge labels to prevent Mermaid parsing issues"""
+    # Replace double quotes with escaped quotes
+    escaped = s.replace('"', '\\"')
+    
+    # Handle markdown-like syntax that Mermaid might misinterpret
+    # Escape numbered lists (e.g., "1. " -> "1\\. ")
+    escaped = re.sub(r'(\d+)\.(\s)', r'\1\\.\2', escaped)
+    
+    # Escape bullet points (e.g., "- " -> "\\- ")
+    escaped = re.sub(r'^[\s]*[-*+](\s)', r'\\-\1', escaped)
+    
+    # Escape hash symbols that might be interpreted as headers
+    escaped = escaped.replace('#', '\\#')
+    
+    return escaped 
