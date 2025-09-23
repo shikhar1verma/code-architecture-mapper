@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: repo_architect
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/repo_architect
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
+      TOP_FILES: ${TOP_FILES:-40}
+      COMPONENT_COUNT: ${COMPONENT_COUNT:-8}
+      CHUNK_SIZE_CHARS: ${CHUNK_SIZE_CHARS:-1400}
+      WORK_DIR: /tmp/repo-architect
+      SQL_DEBUG: ${SQL_DEBUG:-false}
+      DEBUG: ${DEBUG:-true}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - repo_temp:/tmp/repo-architect
+      - .:/app/backend  # Mount source code for hot reloading
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  repo_temp: 

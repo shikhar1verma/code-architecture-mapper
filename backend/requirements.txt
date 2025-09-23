@@ -1,0 +1,37 @@
+# Web Framework - Required for FastAPI backend
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+
+# Data Validation & Models - Used throughout the project
+pydantic==2.10.3
+
+# Environment & Configuration - Used for loading .env files
+python-dotenv==1.0.1
+
+# Graph & Network Analysis - Used in metrics and dependency analysis
+networkx==3.1
+
+# Git Operations - Used for repository cloning and analysis
+gitpython==3.1.43
+
+# LLM & AI - Core package for Gemini API calls (using available version)
+google-generativeai==0.8.5
+
+# HTTP Client - Used for API calls
+httpx==0.27.0
+
+# CLI & Logging - Used for rich console output
+rich==13.7.1
+
+# Database - PostgreSQL support
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.23
+
+# Code Analysis - Core packages for parsing and analyzing code
+grimp>=3.0.0
+tree-sitter==0.21.3
+tree-sitter-languages==1.10.2
+
+# LangGraph - Core workflow engine (REQUIRED for diagram_subgraph.py and graph.py)
+langgraph==0.6.7
+langchain-core==0.3.76 
