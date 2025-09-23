@@ -120,7 +120,7 @@ export function usePolling(analysisId: string | null, options: UsePollingOptions
         pollStatus(id);
       }
     }, interval);
-  }, [interval]);
+  }, [interval, pollStatus]);
 
   useEffect(() => {
     if (analysisId && !isPollingRef.current) {
