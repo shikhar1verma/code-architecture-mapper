@@ -23,7 +23,7 @@ export default function Home() {
   const [currentRepoUrl, setCurrentRepoUrl] = useState<string | null>(null);
 
   // Polling hook for async analysis
-  const { status: pollingStatus, isPolling, stopPolling } = usePolling(
+  const { status: pollingStatus, isPolling } = usePolling(
     analysisId,
     {
       onComplete: (completedResult) => {
@@ -260,13 +260,13 @@ export default function Home() {
               {isPolling && (
                 <div className="text-center text-sm text-gray-600 bg-gray-50 px-4 py-3 rounded-lg">
                   <div className="font-medium text-gray-700 mb-1">
-                    ✨ Hold tight, we're doing the magic! ✨
+                    ✨ Hold tight, we&apos;re doing the magic! ✨
                   </div>
                   <div>
-                    This usually takes around 2 minutes. Perfect time to grab that coffee you've been putting off ☕
+                    This usually takes around 2 minutes. Perfect time to grab that coffee you&apos;ve been putting off ☕
                     <br />
                     <span className="text-xs text-gray-500 mt-1 block">
-                      (We're analyzing your code like a detective solving mysteries 🕵️‍♀️)
+                      (We&apos;re analyzing your code like a detective solving mysteries 🕵️‍♀️)
                     </span>
                   </div>
                 </div>
