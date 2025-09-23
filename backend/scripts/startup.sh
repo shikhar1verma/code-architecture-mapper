@@ -7,6 +7,10 @@ set -e
 
 echo "🚀 Starting Code Architecture Mapper Backend..."
 
+# Initialize database first (create database if not exists)
+echo "🔧 Initializing database..."
+cd /app && PYTHONPATH=/app python backend/db_setup.py init
+
 # Wait for database to be ready
 echo "⏳ Waiting for database to be ready..."
 python -c "

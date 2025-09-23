@@ -47,7 +47,7 @@ class Example(Base):
     repo_name = Column(Text)
     default_branch = Column(Text)
     commit_sha = Column(Text)
-    status = Column(Text, nullable=False, default="complete")
+    status = Column(Text, nullable=False, default="completed")
     message = Column(Text)
     language_stats = Column(JSON)
     loc_total = Column(Integer, default=0)

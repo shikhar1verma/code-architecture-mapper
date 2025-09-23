@@ -50,10 +50,18 @@ def get_db_config():
     }
 
 def create_database_if_not_exists():
-    """Create database if it doesn't exist"""
+    """Create database if it doesn't exist (skip for external databases)"""
     config = get_db_config()
     
-    # Connect to PostgreSQL server (not to specific database)
+    # Skip database creation for external databases (like Supabase)
+    # Check if this is an external database by looking for cloud indicators
+    database_url = os.getenv("DATABASE_URL", "")
+    if any(cloud in database_url.lower() for cloud in ['supabase', 'amazonaws', 'azure', 'googleapis', 'render']):
+        print(f"🌐 Using external database, skipping database creation")
+        print(f"✅ External database connection will be verified during startup")
+        return True
+    
+    # Connect to PostgreSQL server (not to specific database) - for local databases only
     try:
         conn = psycopg2.connect(
             host=config['host'],
@@ -82,7 +90,8 @@ def create_database_if_not_exists():
         
     except psycopg2.Error as e:
         print(f"❌ Error creating database: {e}")
-        return False
+        print("💡 This might be an external database - continuing with table creation...")
+        return True  # Continue anyway for external databases
     
     return True
 

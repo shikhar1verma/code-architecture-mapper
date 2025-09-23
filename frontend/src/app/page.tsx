@@ -53,7 +53,7 @@ export default function Home() {
     try {
       const response = await startAnalysis({ repo_url: url });
       
-      if (response.status === 'completed') {
+      if (response.status === 'completed' || response.status === 'complete') {
         // Analysis already completed (cached) - fetch results immediately
         setAnalysisId(response.analysis_id);
         setIsCachedResult(response.cached || false);
@@ -113,7 +113,7 @@ export default function Home() {
       console.log(`🔄 Refreshing analysis ${analysisId} for ${currentRepoUrl}`);
       const response = await refreshAnalysis({ repo_url: currentRepoUrl, force_refresh: true });
       
-      if (response.status === 'complete') {
+      if (response.status === 'completed' || response.status === 'complete') {
         // Fetch updated results
         const data = await getAnalysis(response.analysis_id);
         setResult(data);

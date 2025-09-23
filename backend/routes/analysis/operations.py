@@ -72,11 +72,12 @@ def run_analysis_background_task(analysis_id: str, repo_url: str, force_refresh:
         # Run the actual analysis
         result = run_analysis_with_langgraph(analysis_id, repo_url, force_refresh)
         
-        # Update with completion status
-        update_analysis_status(analysis_id, "completed", "Analysis completed successfully!")
         
         # Save the full analysis results
         save_analysis_summary(analysis_id, result)
+        
+        # Update with completion status
+        update_analysis_status(analysis_id, "completed", "Analysis completed successfully!")
         
         logger.info(f"✅ Background analysis completed for {analysis_id}")
         
@@ -179,7 +180,7 @@ def refresh_analysis_endpoint(req: StartAnalysisRequest):
         
         return StartAnalysisResponse(
             analysis_id=analysis_id,
-            status="complete",
+            status="completed",
             cached=False
         )
     

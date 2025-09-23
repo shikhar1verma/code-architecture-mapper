@@ -27,6 +27,19 @@ export function usePolling(analysisId: string | null, options: UsePollingOptions
   
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const isPollingRef = useRef(false);
+  
+  // Use refs to store callbacks to prevent recreation on every render
+  const onCompleteRef = useRef(onComplete);
+  const onErrorRef = useRef(onError);
+  
+  // Update refs when callbacks change
+  useEffect(() => {
+    onCompleteRef.current = onComplete;
+  }, [onComplete]);
+  
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
 
   const stopPolling = useCallback(() => {
     if (intervalRef.current) {
@@ -44,34 +57,53 @@ export function usePolling(analysisId: string | null, options: UsePollingOptions
       setState(prev => ({ ...prev, status: statusResponse, error: null }));
       
       // Check if analysis is completed or failed
-      if (statusResponse.status === 'completed') {
-        stopPolling();
+      if (statusResponse.status === 'completed' || statusResponse.status === 'complete') {
+        // Clear polling
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        isPollingRef.current = false;
+        setState(prev => ({ ...prev, isPolling: false }));
         
         // Fetch full analysis results
         try {
           const result = await getAnalysis(id);
           setState(prev => ({ ...prev, result, error: null }));
-          onComplete?.(result);
+          onCompleteRef.current?.(result);
         } catch (err) {
           const errorMessage = err instanceof Error ? err.message : 'Failed to retrieve analysis results';
           setState(prev => ({ ...prev, error: errorMessage }));
-          onError?.(errorMessage);
+          onErrorRef.current?.(errorMessage);
         }
       } else if (statusResponse.status === 'failed') {
-        stopPolling();
+        // Clear polling
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        isPollingRef.current = false;
+        setState(prev => ({ ...prev, isPolling: false }));
+        
         const errorMessage = statusResponse.message || 'Analysis failed';
         setState(prev => ({ ...prev, error: errorMessage }));
-        onError?.(errorMessage);
+        onErrorRef.current?.(errorMessage);
       }
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to get analysis status';
       setState(prev => ({ ...prev, error: errorMessage }));
       
-      // Stop polling on error
-      stopPolling();
-      onError?.(errorMessage);
+      // Clear polling on error
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      isPollingRef.current = false;
+      setState(prev => ({ ...prev, isPolling: false }));
+      
+      onErrorRef.current?.(errorMessage);
     }
-  }, [stopPolling, onComplete, onError]);
+  }, []);
 
   const startPolling = useCallback((id: string) => {
     if (isPollingRef.current || !id) return;
@@ -88,7 +120,7 @@ export function usePolling(analysisId: string | null, options: UsePollingOptions
         pollStatus(id);
       }
     }, interval);
-  }, [pollStatus, interval]);
+  }, [interval]);
 
   useEffect(() => {
     if (analysisId && !isPollingRef.current) {
