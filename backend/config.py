@@ -36,5 +36,25 @@ USE_LLM_FOR_DEPENDENCY_ANALYSIS = os.getenv("USE_LLM_FOR_DEPENDENCY_ANALYSIS", "
 WORK_DIR = os.getenv("WORK_DIR", "/tmp/repo-architect")
 TMP_DIR = os.path.join(WORK_DIR, "tmp")
 
-# Create temp directory for git operations
-os.makedirs(TMP_DIR, exist_ok=True) 
+# Create temp directory for git operations with proper permissions
+os.makedirs(TMP_DIR, exist_ok=True, mode=0o755) 
+
+# Environment Configuration
+ENV_TYPE = os.getenv("ENV_TYPE", "development")
+DEBUG = os.getenv("DEBUG", "true").lower() == "true"
+
+# Frontend Configuration
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
+# Allowed hosts to backend
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+
+# Log environment info in development
+if ENV_TYPE == "development":
+    print("🔧 Backend Environment:", {
+        "ENV_TYPE": ENV_TYPE,
+        "DEBUG": DEBUG,
+        "FRONTEND_URL": FRONTEND_URL,
+        "DATABASE_URL": DATABASE_URL[:50] + "..." if len(DATABASE_URL) > 50 else DATABASE_URL,
+        "ALLOWED_HOSTS": ALLOWED_HOSTS
+    })

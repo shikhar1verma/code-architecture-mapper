@@ -8,8 +8,12 @@ set -e
 echo "🚀 Starting Code Architecture Mapper Backend (Production)..."
 
 # Wait for external database to be ready
-echo "⏳ Waiting for database connection..."
-cd /app && PYTHONPATH=/app python -c "
+echo "⏳ Initializing database..."
+cd /app && PYTHONPATH=/app python backend/db_setup.py init
+
+# Wait for database to be ready
+echo "⏳ Waiting for database to be ready..."
+python -c "
 import time
 import sys
 import psycopg2
@@ -30,18 +34,6 @@ for attempt in range(30):
 else:
     print('❌ Database connection failed after 30 attempts')
     sys.exit(1)
-"
-
-# Initialize database (create tables if they don't exist)
-echo "🔧 Initializing database tables..."
-cd /app && PYTHONPATH=/app python -c "
-from backend.database.connection import init_db
-try:
-    init_db()
-    print('✅ Database tables initialized!')
-except Exception as e:
-    print(f'❌ Database initialization failed: {e}')
-    exit(1)
 "
 
 # Load fixtures (optional in production)

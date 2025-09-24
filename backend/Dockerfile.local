@@ -24,11 +24,6 @@ COPY . ./backend
 # Make scripts executable and fix ownership
 RUN chmod +x ./backend/scripts/*.sh ./backend/scripts/*.py
 
-# Create non-root user for security
-RUN adduser --disabled-password --gecos '' appuser && \
-    chown -R appuser:appuser /app
-USER appuser
-
 # Create temporary directory for git operations
 RUN mkdir -p /tmp/repo-architect/tmp
 

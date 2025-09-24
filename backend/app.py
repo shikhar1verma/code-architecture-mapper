@@ -3,16 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from backend.routes import analysis, examples
 from backend.database.connection import init_db
 from backend.utils.logger import setup_logging, get_logger
+from backend.config import ALLOWED_HOSTS, DEBUG
 
 app = FastAPI(
     title="Repo Architect (No-Embeddings MVP)",
-    debug=True  # Enable debug mode for development
+    debug=DEBUG  # Use debug mode from environment configuration
 )
 
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],  # Frontend URLs
+    allow_origins=ALLOWED_HOSTS,  # Frontend URLs
     allow_credentials=True,
     allow_methods=["*"],  # Allow all methods including OPTIONS
     allow_headers=["*"],  # Allow all headers

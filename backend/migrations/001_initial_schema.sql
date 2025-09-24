@@ -32,7 +32,7 @@ CREATE TABLE analyses (
     mermaid_modules_balanced TEXT,
     mermaid_modules_detailed TEXT,
     
-    token_budget JSONB DEFAULT '{"embed_calls":0,"gen_calls":0,"chunks":0}',
+    token_budget JSONB DEFAULT '{"embed_calls":0,"gen_calls":0,"chunks":0}'::jsonb,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -64,7 +64,7 @@ CREATE TABLE examples (
     mermaid_modules_balanced TEXT,
     mermaid_modules_detailed TEXT,
     
-    token_budget JSONB DEFAULT '{"embed_calls":0,"gen_calls":0,"chunks":0}',
+    token_budget JSONB DEFAULT '{"embed_calls":0,"gen_calls":0,"chunks":0}'::jsonb,
     description TEXT, -- Description for the example
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()

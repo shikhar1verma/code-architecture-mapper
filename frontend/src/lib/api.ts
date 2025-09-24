@@ -1,6 +1,22 @@
 import { AnalysisRequest, AnalysisResponse, AnalysisResult, DiagramGenerationResponse, ExampleSummary, ExampleData, RefreshAnalysisRequest, AnalysisStatusResponse } from '@/types';
 
+// Environment configuration
+const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV || 'development';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+
+// Environment utilities
+export const isProduction = () => APP_ENV === 'production';
+export const isDevelopment = () => APP_ENV === 'development';
+export const getEnvironment = () => APP_ENV;
+export const getApiBaseUrl = () => API_BASE_URL;
+
+// Log environment info in development
+if (isDevelopment()) {
+  console.log('🔧 Frontend Environment:', {
+    APP_ENV,
+    API_BASE_URL
+  });
+}
 
 export async function startAnalysis(request: AnalysisRequest): Promise<AnalysisResponse> {
   const response = await fetch(`${API_BASE_URL}/analysis/start`, {

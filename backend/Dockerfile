@@ -13,16 +13,16 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY requirements.txt ./backend/requirements.txt
 
 # Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r ./backend/requirements.txt
 
 # Copy application code
-COPY . .
+COPY . ./backend
 
-# Make scripts executable
-RUN chmod +x ./scripts/*.sh ./scripts/*.py
+# Make scripts executable and fix ownership
+RUN chmod +x ./backend/scripts/*.sh ./backend/scripts/*.py
 
 # Create temporary directory for git operations
 RUN mkdir -p /tmp/repo-architect/tmp
@@ -31,4 +31,4 @@ RUN mkdir -p /tmp/repo-architect/tmp
 EXPOSE 8000
 
 # Render startup command (simplified)
-CMD ["./scripts/startup.prod.sh"]
+CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]

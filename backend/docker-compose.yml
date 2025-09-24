@@ -13,12 +13,10 @@ services:
       
       # LLM Configuration
       GEMINI_API_KEY: ${GEMINI_API_KEY}
-      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-flash}
       
       # Analysis Configuration
-      TOP_FILES: ${TOP_FILES:-40}
+      TOP_FILES: ${TOP_FILES:-50}
       COMPONENT_COUNT: ${COMPONENT_COUNT:-8}
-      CHUNK_SIZE_CHARS: ${CHUNK_SIZE_CHARS:-1400}
       
       # Application Configuration
       WORK_DIR: /tmp/repo-architect
