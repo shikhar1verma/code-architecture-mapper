@@ -7,6 +7,14 @@
 
 **Code Architecture Mapper** represents a groundbreaking leap in automated code analysis, combining cutting-edge **AI agent workflows** with sophisticated static analysis to create the most intelligent repository documentation system ever built.
 
+## Demo
+
+### Quick Demo
+![Demo GIF](https://github.com/user-attachments/assets/5c5e5d16-c341-4350-8893-21f1a3c774bf)
+
+### Full Video Demo
+[![Watch Full Demo](https://img.shields.io/badge/▶️%20Watch%20Full%20Demo-YouTube-red)](https://youtu.be/TSzqqpr4jww)
+
 ## What Makes This Revolutionary
 
 ### Multi-Agent AI Architecture

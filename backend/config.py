@@ -9,8 +9,8 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 # Model Fallback Configuration (in order of preference)
 # From highest capability to most available (lower quotas but higher RPM/RPD)
 GEMINI_MODEL_FALLBACK_ORDER = [
-    "gemini-2.5-flash",      # Tier 1: Best model, lowest quotas (10 RPM, 250K TPM, 250 RPD)
     "gemini-2.5-flash-lite", # Tier 2: Good model, better quotas (15 RPM, 250K TPM, 1000 RPD)
+    "gemini-2.5-flash",      # Tier 1: Best model, lowest quotas (10 RPM, 250K TPM, 250 RPD)
     "gemini-2.0-flash",      # Tier 3: Good model, better quotas (15 RPM, 1M TPM, 200 RPD)
     "gemini-2.0-flash-lite", # Tier 4: Fastest model, highest quotas (30 RPM, 1M TPM, 200 RPD)
 ]
